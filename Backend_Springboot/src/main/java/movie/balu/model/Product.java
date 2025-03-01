@@ -18,32 +18,26 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private int dlid;
     private String name;
     private String description;
     private String brand;
-    private BigDecimal price;
+    private double price;
     private  String category;
-
-    public int getDlid() {
-		return dlid;
-	}
-	public void setDlid(int dlid) {
-		this.dlid = dlid;
-	}
-	private Date releaseDate;
+    private Date releaseDate;
     private boolean productAvailable;
     private int stockQuantity;
+    private boolean rental; // Add rental field
 
     private String imageName;
     private String imageType;
     @Lob
     private byte[] imageDate;
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -52,9 +46,9 @@ public class Product {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Product(int id, int dlid, String name, String description, String brand, BigDecimal price, String category,
+	public Product(Long id, int dlid, String name, String description, String brand, double price, String category,
 			Date releaseDate, boolean productAvailable, int stockQuantity, String imageName, String imageType,
-			byte[] imageDate) {
+			byte[] imageDate, boolean rental) {
 		super();
 		this.id = id;
 		this.dlid = dlid;
@@ -69,6 +63,13 @@ public class Product {
 		this.imageName = imageName;
 		this.imageType = imageType;
 		this.imageDate = imageDate;
+		this.rental = rental;
+	}
+	public int getDlid() {
+		return dlid;
+	}
+	public void setDlid(int dlid) {
+		this.dlid = dlid;
 	}
 	public String getDescription() {
 		return description;
@@ -82,10 +83,10 @@ public class Product {
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
-	public BigDecimal getPrice() {
+	public double getPrice() {
 		return price;
 	}
-	public void setPrice(BigDecimal price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 	public String getCategory() {
@@ -130,6 +131,12 @@ public class Product {
 	public void setImageDate(byte[] imageDate) {
 		this.imageDate = imageDate;
 	}
+	public boolean isRental() {
+		return rental;
+	}
+	public void setRental(boolean rental) {
+		this.rental = rental;
+	}
 	
 	public Product() {
 		super();
@@ -140,13 +147,6 @@ public class Product {
 		return "Product [id=" + id + ", dlid=" + dlid + ", name=" + name + ", description=" + description + ", brand="
 				+ brand + ", price=" + price + ", category=" + category + ", releaseDate=" + releaseDate
 				+ ", productAvailable=" + productAvailable + ", stockQuantity=" + stockQuantity + ", imageName="
-				+ imageName + ", imageType=" + imageType + ", imageDate=" + Arrays.toString(imageDate) + "]";
+				+ imageName + ", imageType=" + imageType + ", imageDate=" + Arrays.toString(imageDate) + ", rental=" + rental + "]";
 	}
-	
-	
-    
-    
-    
-    
-
 }

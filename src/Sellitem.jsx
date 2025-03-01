@@ -22,12 +22,18 @@ const Sellitem = () => {
     stockQuantity: "",
     releaseDate: "",
     productAvailable: false,
+    rental: false, // Add rental field
   });
   const [image, setImage] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    setProduct({ ...product, [name]: checked });
   };
 
   const handleImageChange = (e) => {
@@ -196,6 +202,19 @@ const Sellitem = () => {
                 }
               />
               <label className="form-check-label">Product Available</label>
+            </div>
+          </div>
+          <div className="col-12">
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="rental"
+                id="rentalCheck"
+                checked={product.rental}
+                onChange={handleCheckboxChange}
+              />
+              <label className="form-check-label">Rental Item</label>
             </div>
           </div>
           <div className="col-12">

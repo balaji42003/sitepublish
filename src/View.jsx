@@ -71,7 +71,6 @@ const View = ({ addToCart }) => {
       <button onClick={() => navigate(-1)} className="btn btn-info mt-5">
         Back to Previous Page
       </button>
-      
       <div
         className="grid"
         style={{
@@ -95,7 +94,7 @@ const View = ({ addToCart }) => {
           </h2>
         ) : (
           products.map((product) => {
-            const { id, brand, name, price, productAvailable, imageUrl } = product;
+            const { id, brand, name, price, productAvailable, imageUrl, rental } = product;
             return (
               <div
                 className="card mb-3"
@@ -152,6 +151,11 @@ const View = ({ addToCart }) => {
                       >
                         {"~ " + brand}
                       </i>
+                      {rental && (
+                        <button className="btn btn-danger btn-sm" style={{ marginLeft: "10px" }}>
+                          Rent
+                        </button>
+                      )}
                     </div>
                     <hr className="hr-line" style={{ margin: "10px 0" }} />
                     <div className="home-cart-price">
@@ -168,7 +172,7 @@ const View = ({ addToCart }) => {
                       </h5>
                     </div>
                     <button
-                      className="btn btn-warning"
+                      className="btn btn-primary"
                       style={{ margin: "10px 25px 0px" }}
                       onClick={(e) => handleAddToCart(product, e)}
                       disabled={!productAvailable}
