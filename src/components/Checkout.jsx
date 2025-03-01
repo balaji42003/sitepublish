@@ -70,6 +70,9 @@ const Checkout = ({ cart, clearCart }) => {
 
   return (
     <div className="container py-5">
+      <button onClick={() => navigate(-1)} className="btn btn-warning mt-5">
+        Back to Previous Page
+      </button>
       <h2 className="mb-4">Checkout</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

@@ -60,7 +60,7 @@ function App() {
       <div>
         <Navbar cart={cart} />
         <Routes>
-          <Route path="/sitepublish" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/dealer-login" element={<DealerLogin />} />
           <Route path="/customer-login" element={<CustomerLogin />} />
           <Route path="/dealer-dashboard" element={<DealerDashboard />} />

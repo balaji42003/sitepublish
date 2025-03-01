@@ -49,7 +49,8 @@ const View = ({ addToCart }) => {
         id, 
         username,
         cartUpdated: true 
-      }
+      },
+      replace: true
     });
   };
 
@@ -66,115 +67,121 @@ const View = ({ addToCart }) => {
   }
 
   return (
-    <div
-      className="grid"
-      style={{
-        marginTop: "64px",
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-        gap: "20px",
-        padding: "20px",
-      }}
-    >
-      {products.length === 0 ? (
-        <h2
-          className="text-center"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          No Products Available
-        </h2>
-      ) : (
-        products.map((product) => {
-          const { id, brand, name, price, productAvailable, imageUrl } = product;
-          return (
-            <div
-              className="card mb-3"
-              style={{
-                width: "250px",
-                height: "360px",
-                boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-                borderRadius: "10px",
-                overflow: "hidden",
-                backgroundColor: productAvailable ? "#fff" : "#ccc",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "flex-start",
-                alignItems: "stretch",
-              }}
-              key={id}
-            >
-              <Link
-                to={`/product/${id}`}
-                style={{ textDecoration: "none", color: "inherit" }}
+    <div>
+      <button onClick={() => navigate(-1)} className="btn btn-info mt-5">
+        Back to Previous Page
+      </button>
+      
+      <div
+        className="grid"
+        style={{
+          marginTop: "64px",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+          gap: "20px",
+          padding: "20px",
+        }}
+      >
+        {products.length === 0 ? (
+          <h2
+            className="text-center"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            No Products Available
+          </h2>
+        ) : (
+          products.map((product) => {
+            const { id, brand, name, price, productAvailable, imageUrl } = product;
+            return (
+              <div
+                className="card mb-3"
+                style={{
+                  width: "250px",
+                  height: "360px",
+                  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  backgroundColor: productAvailable ? "#fff" : "#ccc",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-start",
+                  alignItems: "stretch",
+                }}
+                key={id}
               >
-                <img
-                  src={imageUrl}
-                  alt={name}
-                  style={{
-                    width: "100%",
-                    height: "150px",
-                    objectFit: "cover",
-                    padding: "5px",
-                    margin: "0",
-                    borderRadius: "10px 10px 10px 10px",
-                  }}
-                />
-                <div
-                  className="card-body"
-                  style={{
-                    flexGrow: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    padding: "10px",
-                  }}
+                <Link
+                  to={`/product/${id}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
                 >
-                  <div>
-                    <h5
-                      className="card-title"
-                      style={{ margin: "0 0 10px 0", fontSize: "1.2rem" }}
-                    >
-                      {name.toUpperCase()}
-                    </h5>
-                    <i
-                      className="card-brand"
-                      style={{ fontStyle: "italic", fontSize: "0.8rem" }}
-                    >
-                      {"~ " + brand}
-                    </i>
-                  </div>
-                  <hr className="hr-line" style={{ margin: "10px 0" }} />
-                  <div className="home-cart-price">
-                    <h5
-                      className="card-text"
-                      style={{
-                        fontWeight: "600",
-                        fontSize: "1.1rem",
-                        marginBottom: "5px",
-                      }}
-                    >
-                      <i className="bi bi-currency-rupee"></i>
-                      {price}
-                    </h5>
-                  </div>
-                  <button
-                    className="btn btn-primary"
-                    style={{ margin: "10px 25px 0px" }}
-                    onClick={(e) => handleAddToCart(product, e)}
-                    disabled={!productAvailable}
+                  <img
+                    src={imageUrl}
+                    alt={name}
+                    style={{
+                      width: "100%",
+                      height: "150px",
+                      objectFit: "cover",
+                      padding: "5px",
+                      margin: "0",
+                      borderRadius: "10px 10px 10px 10px",
+                    }}
+                  />
+                  <div
+                    className="card-body"
+                    style={{
+                      flexGrow: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      padding: "10px",
+                    }}
                   >
-                    {productAvailable ? "Add to Cart" : "Out of Stock"}
-                  </button>
-                </div>
-              </Link>
-            </div>
-          );
-        })
-      )}
+                    <div>
+                      <h5
+                        className="card-title"
+                        style={{ margin: "0 0 10px 0", fontSize: "1.2rem" }}
+                      >
+                        {name.toUpperCase()}
+                      </h5>
+                      <i
+                        className="card-brand"
+                        style={{ fontStyle: "italic", fontSize: "0.8rem" }}
+                      >
+                        {"~ " + brand}
+                      </i>
+                    </div>
+                    <hr className="hr-line" style={{ margin: "10px 0" }} />
+                    <div className="home-cart-price">
+                      <h5
+                        className="card-text"
+                        style={{
+                          fontWeight: "600",
+                          fontSize: "1.1rem",
+                          marginBottom: "5px",
+                        }}
+                      >
+                        <i className="bi bi-currency-rupee"></i>
+                        {price}
+                      </h5>
+                    </div>
+                    <button
+                      className="btn btn-warning"
+                      style={{ margin: "10px 25px 0px" }}
+                      onClick={(e) => handleAddToCart(product, e)}
+                      disabled={!productAvailable}
+                    >
+                      {productAvailable ? "Add to Cart" : "Out of Stock"}
+                    </button>
+                  </div>
+                </Link>
+              </div>
+            );
+          })
+        )}
+      </div>
     </div>
   );
 };

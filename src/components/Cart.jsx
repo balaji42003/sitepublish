@@ -40,6 +40,9 @@ const Cart = ({ cart, updateQuantity, removeFromCart }) => {
 
   return (
     <div className="container py-5">
+      <button onClick={() => navigate(-1)} className="btn btn-warning mt-5">
+        Back to Previous Page
+      </button>
       <h2 className="mb-4">Shopping Cart</h2>
       <div className="row">
         <div className="col-md-8">
