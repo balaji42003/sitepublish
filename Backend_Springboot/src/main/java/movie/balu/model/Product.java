@@ -29,6 +29,7 @@ public class Product {
     private boolean productAvailable;
     private int stockQuantity;
     private boolean rental; // Add rental field
+    private double rentalAmount; // Add rental amount field
 
     private String imageName;
     private String imageType;
@@ -48,7 +49,7 @@ public class Product {
 	}
 	public Product(Long id, int dlid, String name, String description, String brand, double price, String category,
 			Date releaseDate, boolean productAvailable, int stockQuantity, String imageName, String imageType,
-			byte[] imageDate, boolean rental) {
+			byte[] imageDate, boolean rental, double rentalAmount) {
 		super();
 		this.id = id;
 		this.dlid = dlid;
@@ -64,6 +65,7 @@ public class Product {
 		this.imageType = imageType;
 		this.imageDate = imageDate;
 		this.rental = rental;
+		this.rentalAmount = rentalAmount;
 	}
 	public int getDlid() {
 		return dlid;
@@ -137,6 +139,12 @@ public class Product {
 	public void setRental(boolean rental) {
 		this.rental = rental;
 	}
+	public double getRentalAmount() {
+		return rentalAmount;
+	}
+	public void setRentalAmount(double rentalAmount) {
+		this.rentalAmount = rentalAmount;
+	}
 	
 	public Product() {
 		super();
@@ -147,6 +155,6 @@ public class Product {
 		return "Product [id=" + id + ", dlid=" + dlid + ", name=" + name + ", description=" + description + ", brand="
 				+ brand + ", price=" + price + ", category=" + category + ", releaseDate=" + releaseDate
 				+ ", productAvailable=" + productAvailable + ", stockQuantity=" + stockQuantity + ", imageName="
-				+ imageName + ", imageType=" + imageType + ", imageDate=" + Arrays.toString(imageDate) + ", rental=" + rental + "]";
+				+ imageName + ", imageType=" + imageType + ", imageDate=" + Arrays.toString(imageDate) + ", rental=" + rental + ", rentalAmount=" + rentalAmount + "]";
 	}
 }

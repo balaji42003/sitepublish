@@ -94,7 +94,7 @@ const View = ({ addToCart }) => {
           </h2>
         ) : (
           products.map((product) => {
-            const { id, brand, name, price, productAvailable, imageUrl, rental } = product;
+            const { id, brand, name, price, productAvailable, imageUrl, rental, rentalAmount } = product;
             return (
               <div
                 className="card mb-3"
@@ -153,7 +153,7 @@ const View = ({ addToCart }) => {
                       </i>
                       {rental && (
                         <button className="btn btn-danger btn-sm" style={{ marginLeft: "10px" }}>
-                          Rent
+                          Rent: ₹{rentalAmount}
                         </button>
                       )}
                     </div>

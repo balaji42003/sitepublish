@@ -23,6 +23,7 @@ const Sellitem = () => {
     releaseDate: "",
     productAvailable: false,
     rental: false, // Add rental field
+    rentalAmount: "", // Add rental amount field
   });
   const [image, setImage] = useState(null);
 
@@ -217,6 +218,22 @@ const Sellitem = () => {
               <label className="form-check-label">Rental Item</label>
             </div>
           </div>
+          {product.rental && (
+            <div className="col-12">
+              <label className="form-label">
+                <h6>Rental Amount</h6>
+              </label>
+              <input
+                type="number"
+                className="form-control"
+                placeholder="Eg: $100"
+                onChange={handleInputChange}
+                value={product.rentalAmount}
+                name="rentalAmount"
+                id="rentalAmount"
+              />
+            </div>
+          )}
           <div className="col-12">
             <button
               type="submit"
