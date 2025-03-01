@@ -10,9 +10,11 @@ import DealerDashboard from './pages/DealerDashboard';
 import CustomerDashboard from './pages/CustomerDashboard';
 import Navbar from './components/Navbar';
 import Sellitem from './SellItem';
+import RentItem from './RentItem';
 import View from './View';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
+import Rent from './Rent'; // Import the new Rent component
 
 function App() {
   const [cart, setCart] = useState(() => {
@@ -77,33 +79,11 @@ function App() {
             } 
           />
           <Route path="/sell" element={<Sellitem />} />
-          <Route 
-            path="/view" 
-            element={
-              <View 
-                addToCart={addToCart} 
-              />
-            } 
-          />
-          <Route 
-            path="/cart" 
-            element={
-              <Cart 
-                cart={cart} 
-                updateQuantity={updateQuantity} 
-                removeFromCart={removeFromCart} 
-              />
-            } 
-          />
-          <Route 
-            path="/checkout" 
-            element={
-              <Checkout 
-                cart={cart} 
-                clearCart={clearCart} 
-              />
-            } 
-          />
+          <Route path="/rent-item" element={<RentItem />} />
+          <Route path="/view" element={<View addToCart={addToCart} />} />
+          <Route path="/cart" element={<Cart cart={cart} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />} />
+          <Route path="/checkout" element={<Checkout cart={cart} clearCart={clearCart} />} />
+          <Route path="/rent" element={<Rent />} /> {/* Add the new route */}
         </Routes>
       </div>
     </Router>

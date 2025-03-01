@@ -14,7 +14,7 @@ const Checkout = ({ cart, clearCart }) => {
   });
   const navigate = useNavigate();
   const location = useLocation();
-  const { customerId, customerName } = location.state || {};
+  const { customerId, customerName, rentalDetails } = location.state || {};
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -24,7 +24,7 @@ const Checkout = ({ cart, clearCart }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Here you would typically send the order details to the backend
-    console.log('Order placed:', { cart, address });
+    console.log('Order placed:', { rentalDetails, cart, address });
     clearCart();
     navigate('/customer-dashboard', { 
       state: { id: customerId, username: customerName }
@@ -38,12 +38,16 @@ const Checkout = ({ cart, clearCart }) => {
     document.body.appendChild(script);
 
     script.onload = () => {
+      const amount = rentalDetails 
+        ? rentalDetails.totalRentalAmount * 100 
+        : cart.reduce((total, item) => total + item.price * item.quantity, 0) * 100;
+
       const options = {
         key: "rzp_live_kYGlb6Srm9dDRe", // Replace with your Razorpay Key ID
-        amount: cart.reduce((total, item) => total + item.price * item.quantity, 0) * 100, // Amount in paise
+        amount: amount, // Amount in paise
         currency: "INR",
         name: "EasyBuy",
-        description: "Purchase Description",
+        description: rentalDetails ? "Rental Payment" : "Purchase Payment",
         handler: function (response) {
           alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
           handleSubmit();
@@ -66,15 +70,51 @@ const Checkout = ({ cart, clearCart }) => {
     };
   };
 
-  const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-
   return (
     <div className="container py-5">
       <button onClick={() => navigate(-1)} className="btn btn-warning mt-5">
         Back to Previous Page
       </button>
       <h2 className="mb-4">Checkout</h2>
-      <form onSubmit={handleSubmit}>
+      {rentalDetails ? (
+        <div className="card">
+          <div className="card-body">
+            <h4 className="card-title">Rental Details</h4>
+            <hr />
+            <div className="mb-3">
+              <label className="form-label">Product Name</label>
+              <p className="form-control-plaintext">{rentalDetails.product.name}</p>
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Rental Duration (days)</label>
+              <p className="form-control-plaintext">{rentalDetails.rentalDuration}</p>
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Total Rental Amount</label>
+              <p className="form-control-plaintext">₹{rentalDetails.totalRentalAmount}</p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="card">
+          <div className="card-body">
+            <h4 className="card-title">Cart Details</h4>
+            <hr />
+            {cart.map((item) => (
+              <div key={item.id} className="mb-3">
+                <label className="form-label">{item.name}</label>
+                <p className="form-control-plaintext">Quantity: {item.quantity}</p>
+                <p className="form-control-plaintext">Price: ₹{item.price}</p>
+              </div>
+            ))}
+            <div className="mb-3">
+              <label className="form-label">Total Amount</label>
+              <p className="form-control-plaintext">₹{cart.reduce((total, item) => total + (item.price * item.quantity), 0)}</p>
+            </div>
+          </div>
+        </div>
+      )}
+      <form className="mt-4" onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Name</label>
           <input
@@ -100,7 +140,7 @@ const Checkout = ({ cart, clearCart }) => {
         <div className="mb-3">
           <label className="form-label">Phone</label>
           <input
-            type="tel"
+            type="text"
             className="form-control"
             name="phone"
             value={address.phone}
@@ -152,7 +192,7 @@ const Checkout = ({ cart, clearCart }) => {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Zip Code</label>
+          <label className="form-label">Zip</label>
           <input
             type="text"
             className="form-control"
@@ -163,7 +203,7 @@ const Checkout = ({ cart, clearCart }) => {
           />
         </div>
         <button type="button" className="btn btn-primary" onClick={handlePayment}>
-          Pay with Razorpay
+          Confirm Payment
         </button>
       </form>
     </div>

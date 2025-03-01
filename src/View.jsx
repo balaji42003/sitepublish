@@ -54,6 +54,17 @@ const View = ({ addToCart }) => {
     });
   };
 
+  const handleRent = (product, e) => {
+    e.preventDefault();
+    navigate('/rent', {
+      state: {
+        product,
+        customerId: id,
+        customerName: username
+      }
+    });
+  };
+
   if (loading) {
     return <div className="text-center py-5">Loading...</div>;
   }
@@ -152,7 +163,11 @@ const View = ({ addToCart }) => {
                         {"~ " + brand}
                       </i>
                       {rental && (
-                        <button className="btn btn-danger btn-sm" style={{ marginLeft: "10px" }}>
+                        <button 
+                          className="btn btn-danger btn-sm" 
+                          style={{ marginLeft: "10px" }}
+                          onClick={(e) => handleRent(product, e)}
+                        >
                           Rent: ₹{rentalAmount}
                         </button>
                       )}
