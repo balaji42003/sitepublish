@@ -14,7 +14,8 @@ import RentItem from './RentItem';
 import View from './View';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
-import Rent from './Rent'; // Import the new Rent component
+import Rent from './Rent';
+import MyOrders from './pages/MyOrders'; // Correct import path
 
 function App() {
   const [cart, setCart] = useState(() => {
@@ -84,6 +85,7 @@ function App() {
           <Route path="/cart" element={<Cart cart={cart} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />} />
           <Route path="/checkout" element={<Checkout cart={cart} clearCart={clearCart} />} />
           <Route path="/rent" element={<Rent />} /> {/* Add the new route */}
+          <Route path="/my-orders" element={<MyOrders />} /> {/* Add the new MyOrders route */}
         </Routes>
       </div>
     </Router>

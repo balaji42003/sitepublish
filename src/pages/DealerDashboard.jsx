@@ -55,6 +55,24 @@ function DealerDashboard() {
     }
   };
 
+  // Handle accepting a customer request
+  const handleAcceptRequest = async (productId) => {
+    try {
+      await axios.put(`http://localhost:8080/updateStatus/${productId}`, { status: 'Accepted' });
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product.id === productId ? { ...product, status: 'Accepted' } : product
+        )
+      );
+      setRefresh(!refresh); // Trigger refresh to update the product list
+
+      // Notify the customer side about the status update
+      await axios.post('http://localhost:8080/notifyCustomer', { productId, status: 'Accepted' });
+    } catch (error) {
+      console.error('Error accepting request:', error);
+    }
+  };
+
   // Handle adding a new product (called from AddProductModal)
   const handleAddProduct = (newProduct) => {
     // Add the new product to the current list
@@ -164,34 +182,35 @@ function DealerDashboard() {
                       <td>{product.expiryDate}</td>
                       <td>{viewCustomerProducts ? product.custname : product.description}</td>
                       <td>
-                        {!viewCustomerProducts ? (<button
-                          className="btn btn-danger"
-                          onClick={() => {handleDeleteProduct(product.id);
-                            increment();
-                          }}
-                        >
-                          <LucideDelete size={18} className="me-1" />
-                          Delete
-                        </button>) : (
-                          <>
+                        {!viewCustomerProducts ? (
                           <button
-                          className="btn btn-danger"
-                          onClick={() => handleDeleteProduct(product.id)}
-                        >
-                          <LucideDelete size={18} className="me-1" />
-                          Delete
-                        </button>
-                        <button
-                          className="btn btn-success ms-2"
-                          onClick={() => handleDeleteProduct(product.id)}
-                        >
-                          <ArrowRightIcon size={18} className="me-1" />
-                          Accept
-                        </button>
-
+                            className="btn btn-danger"
+                            onClick={() => {
+                              handleDeleteProduct(product.id);
+                              increment();
+                            }}
+                          >
+                            <LucideDelete size={18} className="me-1" />
+                            Delete
+                          </button>
+                        ) : (
+                          <>
+                            <button
+                              className="btn btn-danger"
+                              onClick={() => handleDeleteProduct(product.id)}
+                            >
+                              <LucideDelete size={18} className="me-1" />
+                              Reject
+                            </button>
+                            <button
+                              className="btn btn-success ms-2"
+                              onClick={() => handleAcceptRequest(product.id)}
+                            >
+                              <ArrowRightIcon size={18} className="me-1" />
+                              Accept
+                            </button>
                           </>
-                          )}
-                      
+                        )}
                       </td>
                     </tr>
                   ))}

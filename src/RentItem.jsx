@@ -37,7 +37,7 @@ const RentItem = () => {
 
   return (
     <div className="container py-5">
-      <button onClick={() => navigate(-1)} className="btn btn-info mt-5">
+      <button onClick={() => navigate(-1)} className="btn btn-info mt-0">
         Back to Previous Page
       </button>
       <h2 className="mb-4">Rent {product.name}</h2>

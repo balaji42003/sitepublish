@@ -21,14 +21,39 @@ const Checkout = ({ cart, clearCart }) => {
     setAddress({ ...address, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Here you would typically send the order details to the backend
-    console.log('Order placed:', { rentalDetails, cart, address });
+  const saveOrderDetails = (paymentMethod) => {
+    const orderDetails = {
+      customerId,
+      customerName,
+      address,
+      items: rentalDetails ? [rentalDetails] : cart.map(item => ({
+        product: {
+          name: item.name,
+          type: 'Normal'
+        },
+        quantity: item.quantity,
+        price: item.price
+      })),
+      totalAmount: rentalDetails ? rentalDetails.totalRentalAmount : cart.reduce((total, item) => total + item.price * item.quantity, 0),
+      orderDate: new Date().toISOString(),
+      status: 'Pending',
+      productType: rentalDetails ? 'Rental' : 'Normal',
+      paymentMethod: paymentMethod
+    };
+
+    const existingOrders = JSON.parse(localStorage.getItem('orders')) || [];
+    existingOrders.push(orderDetails);
+    localStorage.setItem('orders', JSON.stringify(existingOrders));
+
     clearCart();
-    navigate('/customer-dashboard', { 
+    navigate('/my-orders', { 
       state: { id: customerId, username: customerName }
     });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    saveOrderDetails('Online Payment');
   };
 
   const handlePayment = () => {
@@ -50,7 +75,7 @@ const Checkout = ({ cart, clearCart }) => {
         description: rentalDetails ? "Rental Payment" : "Purchase Payment",
         handler: function (response) {
           alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
-          handleSubmit();
+          saveOrderDetails('Online Payment');
         },
         prefill: {
           name: address.name,
@@ -68,6 +93,12 @@ const Checkout = ({ cart, clearCart }) => {
       const rzp = new window.Razorpay(options);
       rzp.open();
     };
+  };
+
+  const handleCOD = () => {
+    // Handle Cash on Delivery logic here
+    console.log('Order placed with Cash on Delivery:', { rentalDetails, cart, address });
+    saveOrderDetails('Cash on Delivery');
   };
 
   return (
@@ -114,7 +145,9 @@ const Checkout = ({ cart, clearCart }) => {
           </div>
         </div>
       )}
+     
       <form className="mt-4" onSubmit={handleSubmit}>
+        <h2 className="mb-4">Shipping details</h2>
         <div className="mb-3">
           <label className="form-label">Name</label>
           <input
@@ -202,8 +235,11 @@ const Checkout = ({ cart, clearCart }) => {
             required
           />
         </div>
-        <button type="button" className="btn btn-primary" onClick={handlePayment}>
+        <button type="button" className="btn btn-primary me-2" onClick={handlePayment}>
           Confirm Payment
+        </button>
+        <button type="button" className="btn btn-secondary" onClick={handleCOD}>
+          Cash on Delivery
         </button>
       </form>
     </div>

@@ -44,7 +44,7 @@ const View = ({ addToCart }) => {
   const handleAddToCart = async (product, e) => {
     e.preventDefault();
     addToCart(product);
-    navigate('/customer-dashboard', { 
+    navigate('/cart', { 
       state: { 
         id, 
         username,
@@ -79,7 +79,7 @@ const View = ({ addToCart }) => {
 
   return (
     <div>
-      <button onClick={() => navigate(-1)} className="btn btn-info mt-5">
+      <button onClick={() => navigate(-1)} className="btn btn-info mt-0">
         Back to Previous Page
       </button>
       <div

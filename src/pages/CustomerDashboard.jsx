@@ -100,6 +100,13 @@ function CustomerDashboard({ cart = [], addToCart, updateQuantity, removeFromCar
             <ShoppingCart size={18} className="me-1" />
             Cart ({cart?.length || 0})
           </Link>
+          <Link 
+            to="/my-orders" 
+            state={{ id, username }} 
+            className="btn btn-primary ms-3 mt-3 "
+          >
+            My Orders
+          </Link>
         </div>
       </div>
 
