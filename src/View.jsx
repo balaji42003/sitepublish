@@ -79,7 +79,7 @@ const View = ({ addToCart }) => {
 
   return (
     <div>
-      <button onClick={() => navigate(-1)} className="btn btn-info mt-0">
+      <button onClick={() => navigate(-1)} className="btn btn-warning mt-5 ms-4">
         Back to Previous Page
       </button>
       <div
