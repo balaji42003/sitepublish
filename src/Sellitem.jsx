@@ -6,14 +6,21 @@ import { ArrowLeft } from "lucide-react";
 const Sellitem = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { dealerid, username } = location.state || {};
+  const username = location.state?.username || localStorage.getItem("username");
+  const dealerid = location.state?.dealerid || localStorage.getItem("dealerid");
 
   useEffect(() => {
+    if (location.state?.dealerid) {
+      localStorage.setItem("dealerid", location.state.dealerid);
+    }
+    if (location.state?.username) {
+      localStorage.setItem("username", location.state.username);
+    }
     console.log("Dealer id in sellitem component:", dealerid);
-  }, [dealerid]);
+  }, [location.state, dealerid]);
 
   const [product, setProduct] = useState({
-    dlid: dealerid,
+    dlid: dealerid || "",
     name: "",
     brand: "",
     description: "",
@@ -22,9 +29,16 @@ const Sellitem = () => {
     stockQuantity: "",
     releaseDate: "",
     productAvailable: false,
-    rental: false, // Add rental field
-    rentalAmount: "", // Add rental amount field
+    rental: false,
+    rentalAmount: "",
   });
+
+  useEffect(() => {
+    if (dealerid) {
+      setProduct((prev) => ({ ...prev, dlid: dealerid }));
+    }
+  }, [dealerid]);
+
   const [image, setImage] = useState(null);
 
   const handleInputChange = (e) => {
@@ -52,14 +66,12 @@ const Sellitem = () => {
 
     axios
       .post("http://localhost:8080/sellproduct", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       })
       .then((response) => {
         console.log("Product added successfully:", response.data);
         alert("Product added successfully");
-        navigate('/dealer-dashboard', { state: { dealerid, username } });
+        navigate("/dealer-dashboard", { state: { dealerid, username } });
       })
       .catch((error) => {
         console.error("Error adding product:", error);
@@ -72,7 +84,7 @@ const Sellitem = () => {
       <div className="center-container">
         <button
           className="btn btn-success mb-3 mt-5"
-          onClick={() => navigate('/dealer-dashboard', { state: { dealerid, username } })}
+          onClick={() => navigate("/dealer-dashboard", { state: { dealerid, username } })}
         >
           <ArrowLeft size={18} className="me-1" />
           Back to Dashboard
@@ -184,11 +196,7 @@ const Sellitem = () => {
             <label className="form-label">
               <h6>Image</h6>
             </label>
-            <input
-              className="form-control"
-              type="file"
-              onChange={handleImageChange}
-            />
+            <input className="form-control" type="file" onChange={handleImageChange} />
           </div>
           <div className="col-12">
             <div className="form-check">
@@ -198,9 +206,7 @@ const Sellitem = () => {
                 name="productAvailable"
                 id="gridCheck"
                 checked={product.productAvailable}
-                onChange={(e) =>
-                  setProduct({ ...product, productAvailable: e.target.checked })
-                }
+                onChange={(e) => setProduct({ ...product, productAvailable: e.target.checked })}
               />
               <label className="form-check-label">Product Available</label>
             </div>
@@ -235,10 +241,7 @@ const Sellitem = () => {
             </div>
           )}
           <div className="col-12">
-            <button
-              type="submit"
-              className="btn btn-primary"
-            >
+            <button type="submit" className="btn btn-primary">
               Submit
             </button>
           </div>

@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import DealerInfoModal from "./components/DealerInfoModal"; // Import the new modal component
 
 const View = ({ addToCart }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null); // State to track the selected product for dealer info
+  const [showDealerInfo, setShowDealerInfo] = useState(false);
+  const [selectedDealer, setSelectedDealer] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { id, username } = location.state || {};
@@ -63,6 +67,17 @@ const View = ({ addToCart }) => {
         customerName: username
       }
     });
+  };
+
+  const handleInfoClick = (e, product) => {
+    e.preventDefault(); // Stop the link navigation
+    e.stopPropagation(); // Prevent event bubbling
+    setSelectedDealer(product);
+    setShowDealerInfo(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedProduct(null);
   };
 
   if (loading) {
@@ -171,6 +186,18 @@ const View = ({ addToCart }) => {
                           Rent: ₹{rentalAmount}
                         </button>
                       )}
+                      <button
+                        className="btn btn-success btn-sm ms-3"
+                        style={{
+                          width: "30px",
+                          height: "20px",
+                          fontSize: "8px",
+                          padding: "2px 4px"
+                        }}
+                        onClick={(e) => handleInfoClick(e, product)}
+                      >
+                        info
+                      </button>
                     </div>
                     <hr className="hr-line" style={{ margin: "10px 0" }} />
                     <div className="home-cart-price">
@@ -201,6 +228,15 @@ const View = ({ addToCart }) => {
           })
         )}
       </div>
+      {selectedDealer && (
+        <DealerInfoModal
+          product={selectedDealer}
+          onClose={() => {
+            setShowDealerInfo(false);
+            setSelectedDealer(null);
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -42,12 +42,16 @@ public class UserController {
     }
 
     @PostMapping("/registerdealer")
-    public ResponseEntity<?> saveDealer(@RequestBody DealerLogin dealer) {
-        DealerLogin saved = service.SaveDealer(dealer);
-        if (saved != null) {
-            return new ResponseEntity<>("Dealer Registerd Successfully", HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>("some error", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> saveDealer(@RequestPart("dealer") DealerLogin dealer, @RequestPart("shopPhoto") MultipartFile shopPhoto) {
+        try {
+            DealerLogin saved = service.SaveDealer(dealer, shopPhoto);
+            if (saved != null) {
+                return new ResponseEntity<>("Dealer Registered Successfully", HttpStatus.CREATED);
+            } else {
+                return new ResponseEntity<>("some error", HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -153,4 +157,9 @@ public class UserController {
         byte[] imageFile = product.getImageDate();
         return ResponseEntity.ok().contentType(MediaType.valueOf(product.getImageType(""))).body(imageFile);
     }
+    @GetMapping("dealerinfo/{dealerId}")
+    public ResponseEntity<DealerLogin> getDealerById(@PathVariable int dealerId) {
+    DealerLogin dealer = service.getDealerById(dealerId);
+    return new ResponseEntity<>(dealer, HttpStatus.OK);
+}
 }

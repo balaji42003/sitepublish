@@ -36,7 +36,12 @@ public class UserService {
         return repo.save(user);
     }
 
-    public DealerLogin SaveDealer(DealerLogin dealer) {
+    public DealerLogin SaveDealer(DealerLogin dealer, MultipartFile shopPhoto) throws IOException {
+        if (shopPhoto != null && !shopPhoto.isEmpty()) {
+            dealer.setShopPhotoName(shopPhoto.getOriginalFilename());
+            dealer.setShopPhotoType(shopPhoto.getContentType());
+            dealer.setShopPhotoData(shopPhoto.getBytes());
+        }
         return dlrepo.save(dealer);
     }
 
@@ -98,4 +103,9 @@ public class UserService {
     public Product getProductById(int productId) {
         return pdrepo.findById(productId).orElse(null);
     }
+
+    public DealerLogin getDealerById(int dealerId) {
+        return dlrepo.findById(dealerId).orElse(null);
+    }
+
 }

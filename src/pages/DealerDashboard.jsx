@@ -29,6 +29,11 @@ function DealerDashboard() {
       console.error('Error fetching products:', error);
     }
   };
+  const handleSellItemClick = () => {
+console.log(dealerid,username);
+    navigate('/sell', { state: { dealerid, username } });
+
+  };
 
   // Fetch products when component mounts or when toggling between dealer and customer products
   useEffect(() => {
@@ -94,15 +99,11 @@ function DealerDashboard() {
             <CheckCircle size={18} className="me-1" />
             {viewCustomerProducts ? "Show Dealer Products" : "Approve Requests"}
           </button>
-          <Link to={{
-            pathname: "/sell",
-            state: { dealerid, username }
-          }}>
-            <button className="btn btn-success" onClick={() => setSellitem(true)}>
+            <button className="btn btn-success" onClick={handleSellItemClick}>
               <Package size={18} className="me-1" />
               Upload Product
             </button>
-          </Link> 
+          
           <button className="btn btn-info mt-4" onClick={() => setShowAddModal(true)}>
             <Package size={18} className="me-1" />
             Sell Item
