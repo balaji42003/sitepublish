@@ -93,141 +93,200 @@ const View = ({ addToCart }) => {
   }
 
   return (
-    <div>
-      <button onClick={() => navigate(-1)} className="btn btn-warning mt-5 ms-4">
-        Back to Previous Page
-      </button>
-      <div
-        className="grid"
-        style={{
-          marginTop: "64px",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-          gap: "20px",
-          padding: "20px",
-        }}
-      >
-        {products.length === 0 ? (
-          <h2
-            className="text-center"
+    <div className="bg-light min-vh-100" style={{ backgroundColor: '#f8f9fa' }}>
+      {/* Header Section with gradient background */}
+      <div style={{
+        background: 'linear-gradient(135deg, #6B73FF 0%, #000DFF 100%)',
+        padding: '2rem 0',
+        marginBottom: '2rem'
+      }}>
+        <div className="container">
+          <button 
+            onClick={() => navigate(-1)} 
             style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              background: 'white',
+              border: 'none',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '8px',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              color: '#000DFF'
             }}
+            onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+            onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
           >
-            No Products Available
-          </h2>
-        ) : (
-          products.map((product) => {
-            const { id, brand, name, price, productAvailable, imageUrl, rental, rentalAmount } = product;
-            return (
-              <div
-                className="card mb-3"
-                style={{
-                  width: "250px",
-                  height: "360px",
-                  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-                  borderRadius: "10px",
-                  overflow: "hidden",
-                  backgroundColor: productAvailable ? "#fff" : "#ccc",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "flex-start",
-                  alignItems: "stretch",
-                }}
-                key={id}
-              >
-                <Link
-                  to={`/product/${id}`}
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <img
-                    src={imageUrl}
-                    alt={name}
-                    style={{
-                      width: "100%",
-                      height: "150px",
-                      objectFit: "cover",
-                      padding: "5px",
-                      margin: "0",
-                      borderRadius: "10px 10px 10px 10px",
-                    }}
-                  />
-                  <div
-                    className="card-body"
-                    style={{
-                      flexGrow: 1,
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                      padding: "10px",
-                    }}
-                  >
-                    <div>
-                      <h5
-                        className="card-title"
-                        style={{ margin: "0 0 10px 0", fontSize: "1.2rem" }}
-                      >
-                        {name.toUpperCase()}
-                      </h5>
-                      <i
-                        className="card-brand"
-                        style={{ fontStyle: "italic", fontSize: "0.8rem" }}
-                      >
-                        {"~ " + brand}
-                      </i>
-                      {rental && (
-                        <button 
-                          className="btn btn-danger btn-sm" 
-                          style={{ marginLeft: "10px" }}
-                          onClick={(e) => handleRent(product, e)}
-                        >
-                          Rent: ₹{rentalAmount}
-                        </button>
-                      )}
-                      <button
-                        className="btn btn-success btn-sm ms-3"
-                        style={{
-                          width: "30px",
-                          height: "20px",
-                          fontSize: "8px",
-                          padding: "2px 4px"
-                        }}
-                        onClick={(e) => handleInfoClick(e, product)}
-                      >
-                        info
-                      </button>
-                    </div>
-                    <hr className="hr-line" style={{ margin: "10px 0" }} />
-                    <div className="home-cart-price">
-                      <h5
-                        className="card-text"
-                        style={{
-                          fontWeight: "600",
-                          fontSize: "1.1rem",
-                          marginBottom: "5px",
-                        }}
-                      >
-                        <i className="bi bi-currency-rupee"></i>
-                        {price}
-                      </h5>
-                    </div>
-                    <button
-                      className="btn btn-primary"
-                      style={{ margin: "10px 25px 0px" }}
-                      onClick={(e) => handleAddToCart(product, e)}
-                      disabled={!productAvailable}
-                    >
-                      {productAvailable ? "Add to Cart" : "Out of Stock"}
-                    </button>
-                  </div>
-                </Link>
-              </div>
-            );
-          })
-        )}
+            <i className="bi bi-arrow-left"></i>
+            Back to Previous Page
+          </button>
+        </div>
       </div>
+
+      {/* Products Grid */}
+      <div className="container" style={{ padding: '2rem 0' }}>
+        <div className="row g-4">
+          {products.length === 0 ? (
+            <div className="col-12" style={{ 
+              textAlign: 'center', 
+              padding: '5rem 0' 
+            }}>
+              <div style={{
+                background: 'white',
+                borderRadius: '12px',
+                padding: '3rem',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+              }}>
+                <h2 style={{ marginBottom: '1rem' }}>No Products Available</h2>
+                <p style={{ color: '#6c757d' }}>Check back later for new products</p>
+              </div>
+            </div>
+          ) : (
+            products.map((product) => {
+              const { id, brand, name, price, productAvailable, imageUrl, rental, rentalAmount } = product;
+              return (
+                <div className="col-sm-6 col-lg-4 col-xl-3" key={id}>
+                  <div style={{
+                    background: productAvailable ? 'white' : '#f8f9fa',
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                    transition: 'all 0.3s ease',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    ':hover': {
+                      transform: 'translateY(-5px)',
+                      boxShadow: '0 8px 12px rgba(0,0,0,0.15)'
+                    }
+                  }}>
+                    <div style={{ position: 'relative' }}>
+                      <img
+                        src={imageUrl}
+                        alt={name}
+                        style={{
+                          width: '100%',
+                          height: '200px',
+                          objectFit: 'cover'
+                        }}
+                      />
+                      {rental && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '8px',
+                          right: '8px'
+                        }}>
+                          <span style={{
+                            background: '#dc3545',
+                            color: 'white',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '20px',
+                            fontSize: '0.875rem'
+                          }}>
+                            Rental Available
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div style={{
+                      padding: '1.5rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      flexGrow: 1
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'start',
+                        marginBottom: '0.75rem'
+                      }}>
+                        <h5 style={{ margin: 0, fontSize: '1.1rem' }}>{name.toUpperCase()}</h5>
+                        <button
+                          onClick={(e) => handleInfoClick(e, product)}
+                          style={{
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            border: '2px solid #198754',
+                            background: 'transparent',
+                            color: '#198754',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease'
+                          }}
+                        >
+                          <i className="bi bi-info"></i>
+                        </button>
+                      </div>
+                      
+                      <p style={{
+                        color: '#6c757d',
+                        fontSize: '0.875rem',
+                        marginBottom: '1rem'
+                      }}>
+                        <i className="bi bi-tag me-1"></i>
+                        {brand}
+                      </p>
+
+                      <div style={{ marginTop: 'auto' }}>
+                        <div style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: '1rem'
+                        }}>
+                          <h4 style={{ margin: 0, color: '#198754' }}>₹{price}</h4>
+                          {rental && (
+                            <button 
+                              onClick={(e) => handleRent(product, e)}
+                              style={{
+                                background: 'transparent',
+                                border: '1px solid #dc3545',
+                                color: '#dc3545',
+                                padding: '0.25rem 0.75rem',
+                                borderRadius: '4px',
+                                fontSize: '0.875rem',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease'
+                              }}
+                            >
+                              Rent: ₹{rentalAmount}/day
+                            </button>
+                          )}
+                        </div>
+                        
+                        <button
+                          onClick={(e) => handleAddToCart(product, e)}
+                          disabled={!productAvailable}
+                          style={{
+                            width: '100%',
+                            padding: '0.75rem',
+                            border: 'none',
+                            borderRadius: '8px',
+                            background: productAvailable ? '#0d6efd' : '#6c757d',
+                            color: 'white',
+                            cursor: productAvailable ? 'pointer' : 'not-allowed',
+                            transition: 'all 0.3s ease'
+                          }}
+                        >
+                          <i className={`bi bi-${productAvailable ? 'cart-plus' : 'x-circle'} me-2`}></i>
+                          {productAvailable ? "Add to Cart" : "Out of Stock"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </div>
+
+      {/* Dealer Info Modal */}
       {selectedDealer && (
         <DealerInfoModal
           product={selectedDealer}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Briefcase, CheckCircle, Inbox, Package, ShoppingBag, UserCheck2Icon, LucideDelete, ArrowRightIcon } from 'lucide-react'; 
 import AddProductModal from '../components/AddProductModal'; 
 import axios from 'axios'; 
+import '../DealerDashboard.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom'; 
 
 function DealerDashboard() { 
@@ -11,6 +12,7 @@ function DealerDashboard() {
   const [recieved, setRecieved] = useState(0); 
   const [refresh, setRefresh] = useState(false); 
   const [viewCustomerProducts, setViewCustomerProducts] = useState(false); 
+  const [dealerInfo, setDealerInfo] = useState(null);
   const location = useLocation(); 
   const navigate = useNavigate();
   const username = location.state?.username; 
@@ -35,8 +37,19 @@ console.log(dealerid,username);
 
   };
 
-  // Fetch products when component mounts or when toggling between dealer and customer products
+  // Fetch dealer info including shop photo
+  const fetchDealerInfo = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/dealerinfo/${dealerid}`);
+      setDealerInfo(response.data);
+    } catch (error) {
+      console.error('Error fetching dealer info:', error);
+    }
+  };
+
+  // Fetch products and dealer info when component mounts or when toggling between dealer and customer products
   useEffect(() => {
+    fetchDealerInfo();
     fetchProducts();
   }, [refresh]);
 
@@ -87,70 +100,68 @@ console.log(dealerid,username);
   };
 
   return (
-    <div className="container py-5">
-      <div className="row mb-4">
-        <div className="col-md-8">
-          <h2 className="mb-0">Dealer Dashboard</h2>
-          <UserCheck2Icon size={40} className="me-2" />
-          <h4 className="text-muted">Welcome back, {username}</h4>
+    <div className="dashboard-container">
+      {/* Background Image Section */}
+      <div 
+        className="shop-photo-background"
+        style={{
+          backgroundImage: dealerInfo?.shopPhotoData 
+            ? `url(data:${dealerInfo.shopPhotoType};base64,${dealerInfo.shopPhotoData})`
+            : 'none',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          height: '50vh',
+          position: 'relative'
+        }}
+      >
+        {/* Overlay with gradient */}
+        <div className="overlay">
+          <div className="dealer-info">
+            <h1>{username}</h1>
+            <p>{dealerInfo?.location}</p>
+          </div>
         </div>
-        <div className="col-md-4 text-md-end">
+      </div>
+
+      {/* Content Section */}
+      <div className="dashboard-content">
+        {/* Action Buttons */}
+        <div className="action-buttons mb-4">
           <button className="btn btn-primary me-2" onClick={toggleView}>
             <CheckCircle size={18} className="me-1" />
             {viewCustomerProducts ? "Show Dealer Products" : "Approve Requests"}
           </button>
-            <button className="btn btn-success" onClick={handleSellItemClick}>
-              <Package size={18} className="me-1" />
-              Upload Product
-            </button>
-          
-          <button className="btn btn-info mt-4" onClick={() => setShowAddModal(true)}>
+          <button className="btn btn-success me-2" onClick={handleSellItemClick}>
+            <Package size={18} className="me-1" />
+            Upload Product
+          </button>
+          <button className="btn btn-info" onClick={() => setShowAddModal(true)}>
             <Package size={18} className="me-1" />
             Sell Item
           </button>
         </div>
-      </div>
-      <div className="row">
-        {/* Card Display for Product Stats */}
-        <div className="col-md-4 mb-4">
-          <div className="card h-100">
-            <div className="card-body">
-              <div className="d-flex align-items-center mb-3">
-                <Package size={24} className="text-primary me-2" />
-                <h3 className="card-title mb-0">Products Listed</h3>
-              </div>
-              <h4 className="display-4 mb-0">{products.length}</h4>
-            </div>
+
+        {/* Stats Cards */}
+        <div className="stats-cards">
+          <div className="stat-card">
+            <Package size={24} className="text-primary" />
+            <h3>Products Listed</h3>
+            <h2>{products.length}</h2>
+          </div>
+          <div className="stat-card">
+            <Inbox size={24} className="text-success" />
+            <h3>Recovered Items</h3>
+            <h2>{recieved}</h2>
+          </div>
+          <div className="stat-card">
+            <ShoppingBag size={24} className="text-info" />
+            <h3>Collected Items</h3>
+            <h2>0</h2>
           </div>
         </div>
-        <div className="col-md-4 mb-4">
-          <div className="card h-100">
-            <div className="card-body">
-              <div className="d-flex align-items-center mb-3">
-                <Inbox size={24} className="text-success me-2" />
-                <h3 className="card-title mb-0">Recovered From Customers</h3>
-              </div>
-              <h4 className="display-4 mb-0">{recieved}</h4>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-4 mb-4">
-          <div className="card h-100">
-            <div className="card-body">
-              <div className="d-flex align-items-center mb-3">
-                <ShoppingBag size={24} className="text-success me-2" />
-                <h3 className="card-title mb-0">Collected Items</h3>
-              </div>
-              <h4 className="display-4 mb-0">0</h4>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="card">
-        <div className="card-header">
-          <h3 className="mb-0">{viewCustomerProducts ? "Customer Product Requests" : "Product Inventory"}</h3>
-        </div>
-        <div className="card-body">
+
+        {/* Products Table */}
+        <div className="products-section">
           {products.length === 0 ? (
             <div className="text-center py-5">
               <Package size={48} className="text-muted mb-3" />
@@ -221,11 +232,13 @@ console.log(dealerid,username);
           )}
         </div>
       </div>
+
+      {/* Modal */}
       {showAddModal && (
         <AddProductModal
           show={showAddModal}
           onClose={() => setShowAddModal(false)}
-          onAddProduct={handleAddProduct} // Passing the function to handle product addition
+          onAddProduct={handleAddProduct}
           isDealer={true}
           dealerid={dealerid}
           setRefresh={setRefresh}

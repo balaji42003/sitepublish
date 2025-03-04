@@ -9,13 +9,13 @@ import CustomerLogin from './pages/CustomerLogin';
 import DealerDashboard from './pages/DealerDashboard';
 import CustomerDashboard from './pages/CustomerDashboard';
 import Navbar from './components/Navbar';
-import Sellitem from './SellItem';
 import RentItem from './RentItem';
 import View from './View';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import Rent from './Rent';
 import MyOrders from './pages/MyOrders'; // Correct import path
+import Sellitem from './Sellitem';
 
 function App() {
   const [cart, setCart] = useState(() => {
