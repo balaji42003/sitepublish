@@ -7,7 +7,7 @@ function Home() {
     <div style={{ backgroundColor: '#f8f9fa' }}>
       {/* Hero Section with Gradient Background */}
       <div style={{
-  background: 'linear-gradient(135deg ,rgba(34, 94, 233, 0.6) 10%, rgba(29, 84, 213, 0.6) 60%, rgba(29, 36, 57, 0.6) 20%)', // Lighter gradient
+  background: 'linear-gradient(135deg , rgba(29, 84, 213, 0.6) 60%, rgba(17, 191, 40, 0.48) 20%)', // Lighter gradient
   minHeight: '80vh',
   display: 'flex',
   alignItems: 'center',

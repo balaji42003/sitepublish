@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react'; 
-import { Briefcase, CheckCircle, Inbox, Package, ShoppingBag, UserCheck2Icon, LucideDelete, ArrowRightIcon } from 'lucide-react'; 
-import AddProductModal from '../components/AddProductModal'; 
-import axios from 'axios'; 
+import React, { useState, useEffect } from 'react';
+import { Briefcase, CheckCircle, Inbox, Package, ShoppingBag, UserCheck2Icon, LucideDelete, ArrowRightIcon } from 'lucide-react';
+import AddProductModal from '../components/AddProductModal';
+import axios from 'axios';
 import '../DealerDashboard.css';
-import { Link, useLocation, useNavigate } from 'react-router-dom'; 
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-function DealerDashboard() { 
-  const [showAddModal, setShowAddModal] = useState(false); 
-  const [sellitem, setSellitem] = useState(false); 
-  const [products, setProducts] = useState([]); 
-  const [recieved, setRecieved] = useState(0); 
-  const [refresh, setRefresh] = useState(false); 
-  const [viewCustomerProducts, setViewCustomerProducts] = useState(false); 
+function DealerDashboard() {
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [sellitem, setSellitem] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [recieved, setRecieved] = useState(0);
+  const [refresh, setRefresh] = useState(false);
+  const [viewCustomerProducts, setViewCustomerProducts] = useState(false);
   const [dealerInfo, setDealerInfo] = useState(null);
-  const location = useLocation(); 
+  const location = useLocation();
   const navigate = useNavigate();
-  const username = location.state?.username; 
-  const dealerid = location.state?.dealerid; 
+  const username = location.state?.username;
+  const dealerid = location.state?.dealerid;
 
-  // Fetch products from the backend 
-  const fetchProducts = async () => { 
-    try { 
-      setProducts([]); // Reset products to force re-fetching 
+  // Fetch products from the backend
+  const fetchProducts = async () => {
+    try {
+      setProducts([]); // Reset products to force re-fetching
       const url = viewCustomerProducts
         ? 'http://localhost:8080/getcustomerproducts'
         : `http://localhost:8080/getdealerproduct/${dealerid}`;
@@ -32,9 +32,8 @@ function DealerDashboard() {
     }
   };
   const handleSellItemClick = () => {
-console.log(dealerid,username);
+    console.log(dealerid, username);
     navigate('/sell', { state: { dealerid, username } });
-
   };
 
   // Fetch dealer info including shop photo
@@ -45,7 +44,6 @@ console.log(dealerid,username);
     } catch (error) {
       console.error('Error fetching dealer info:', error);
     }
-    
   };
 
   // Fetch products and dealer info when component mounts or when toggling between dealer and customer products
@@ -60,7 +58,7 @@ console.log(dealerid,username);
     setRefresh((prev) => !prev); // Force refresh
   };
 
-  const increment=()=>{
+  const increment = () => {
     setRecieved(recieved + 1);
   };
 
@@ -113,7 +111,7 @@ console.log(dealerid,username);
             boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
           }}>
             <div className="dealer-info mb-4">
-              <h1 style={{ 
+              <h1 style={{
                 color: '#333333',
                 fontSize: '2.5rem',
                 fontWeight: '600',
@@ -128,8 +126,8 @@ console.log(dealerid,username);
 
             {/* Action Buttons */}
             <div className="d-flex flex-column gap-3">
-              <button 
-                className="btn w-100" 
+              <button
+                className="btn w-100"
                 onClick={toggleView}
                 style={{
                   background: 'linear-gradient(135deg, rgb(23, 42, 165) 0%, rgb(114, 127, 190) 100%)',
@@ -142,8 +140,8 @@ console.log(dealerid,username);
                 <CheckCircle size={18} className="me-2" />
                 {viewCustomerProducts ? "Show Dealer Products" : "Approve Requests"}
               </button>
-              <button 
-                className="btn w-100" 
+              <button
+                className="btn w-100"
                 onClick={handleSellItemClick}
                 style={{
                   background: 'white',
@@ -155,8 +153,8 @@ console.log(dealerid,username);
                 <Package size={18} className="me-2" />
                 Upload Product
               </button>
-              <button 
-                className="btn w-100" 
+              <button
+                className="btn w-100"
                 onClick={() => setShowAddModal(true)}
                 style={{
                   background: 'white',
@@ -172,27 +170,33 @@ console.log(dealerid,username);
           </div>
         </div>
 
-        <div className="col-md-8">
-          <div style={{
-            height: '100%',
-            borderRadius: '20px',
-            overflow: 'hidden',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
-          }}>
-            <img 
-              src={dealerInfo?.shopPhotoData ? 
-                `data:${dealerInfo.shopPhotoType};base64,${dealerInfo.shopPhotoData}` : 
-                'placeholder-image-url'} 
-              alt="Shop"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                borderRadius: '20px'
-              }}
-            />
-          </div>
-        </div>
+        <div className="col-md-4" style={{marginLeft:"150px", marginTop:"50px"}}>
+  <div className="ms-4" style={{
+    height: '400px',  // Defined a max height for consistency
+    width: '800px',  
+    borderRadius: '20px',
+    overflow: 'hidden',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',  // Centers image inside the div
+    background: '#f4f4f4'  // Light background to avoid blank spaces
+  }}>
+    <img
+      src={dealerInfo?.shopPhotoData 
+        ? `data:${dealerInfo.shopPhotoType};base64,${dealerInfo.shopPhotoData}` 
+        : 'https://via.placeholder.com/300'}  // Fallback image
+      alt="Shop"
+      style={{
+        Width: '100%',  
+        Height: '100%',  
+        objectFit: 'contain',  // Keeps the full image visible without cropping
+        borderRadius: '20px'
+      }}
+    />
+  </div>
+</div>
+
       </div>
 
       {/* Stats Section */}
@@ -245,7 +249,7 @@ console.log(dealerid,username);
         <h2 style={{ marginBottom: '2rem', color: '#333333' }}>
           {viewCustomerProducts ? "Customer Requests" : "Your Products"}
         </h2>
-        
+
         {products.length === 0 ? (
           <div className="text-center py-5">
             <Package size={48} style={{ color: '#cbd5e1' }} className="mb-3" />
