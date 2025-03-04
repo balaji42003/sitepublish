@@ -80,172 +80,203 @@ const Sellitem = () => {
   };
 
   return (
-    <div className="container">
-      <div className="center-container">
+    <div style={{
+      background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
+      minHeight: '100vh',
+      padding: '2rem 0'
+    }}>
+      <div className="container">
         <button
-          className="btn btn-success mb-3 mt-5"
           onClick={() => navigate("/dealer-dashboard", { state: { dealerid, username } })}
+          style={{
+            border: '2px solid rgb(23, 42, 165)',
+            color: 'rgb(23, 42, 165)',
+            padding: '0.75rem 1.5rem',
+            borderRadius: '10px',
+            transition: 'all 0.3s ease',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            marginBottom: '2rem',
+            background: 'transparent'
+          }}
         >
-          <ArrowLeft size={18} className="me-1" />
+          <ArrowLeft size={18} />
           Back to Dashboard
         </button>
-        <form className="row g-3 pt-5" onSubmit={submitHandler}>
-          <div className="col-md-6">
-            <label className="form-label">
-              <h6>Name</h6>
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Product Name"
-              onChange={handleInputChange}
-              value={product.name}
-              name="name"
-            />
-          </div>
-          <div className="col-md-6">
-            <label className="form-label">
-              <h6>Brand</h6>
-            </label>
-            <input
-              type="text"
-              name="brand"
-              className="form-control"
-              placeholder="Enter your Brand"
-              value={product.brand}
-              onChange={handleInputChange}
-              id="brand"
-            />
-          </div>
-          <div className="col-12">
-            <label className="form-label">
-              <h6>Description</h6>
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Add product description"
-              value={product.description}
-              name="description"
-              onChange={handleInputChange}
-              id="description"
-            />
-          </div>
-          <div className="col-5">
-            <label className="form-label">
-              <h6>Price</h6>
-            </label>
-            <input
-              type="number"
-              className="form-control"
-              placeholder="Eg: $1000"
-              onChange={handleInputChange}
-              value={product.price}
-              name="price"
-              id="price"
-            />
-          </div>
-          <div className="col-md-6">
-            <label className="form-label">
-              <h6>Category</h6>
-            </label>
-            <select
-              className="form-select"
-              value={product.category}
-              onChange={handleInputChange}
-              name="category"
-              id="category"
-            >
-              <option value="">Select category</option>
-              <option value="Laptop">Laptop</option>
-              <option value="Headphone">Headphone</option>
-              <option value="Mobile">Mobile</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Toys">Toys</option>
-              <option value="Fashion">Fashion</option>
-            </select>
-          </div>
-          <div className="col-md-4">
-            <label className="form-label">
-              <h6>Stock Quantity</h6>
-            </label>
-            <input
-              type="number"
-              className="form-control"
-              placeholder="Stock Remaining"
-              onChange={handleInputChange}
-              value={product.stockQuantity}
-              name="stockQuantity"
-              id="stockQuantity"
-            />
-          </div>
-          <div className="col-md-4">
-            <label className="form-label">
-              <h6>Release Date</h6>
-            </label>
-            <input
-              type="date"
-              className="form-control"
-              value={product.releaseDate}
-              name="releaseDate"
-              onChange={handleInputChange}
-              id="releaseDate"
-            />
-          </div>
-          <div className="col-md-4">
-            <label className="form-label">
-              <h6>Image</h6>
-            </label>
-            <input className="form-control" type="file" onChange={handleImageChange} />
-          </div>
-          <div className="col-12">
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                name="productAvailable"
-                id="gridCheck"
-                checked={product.productAvailable}
-                onChange={(e) => setProduct({ ...product, productAvailable: e.target.checked })}
-              />
-              <label className="form-check-label">Product Available</label>
-            </div>
-          </div>
-          <div className="col-12">
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                name="rental"
-                id="rentalCheck"
-                checked={product.rental}
-                onChange={handleCheckboxChange}
-              />
-              <label className="form-check-label">Rental Item</label>
-            </div>
-          </div>
-          {product.rental && (
-            <div className="col-12">
-              <label className="form-label">
-                <h6>Rental Amount</h6>
+
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '20px',
+          padding: '2rem',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+          backdropFilter: 'blur(10px)'
+        }}>
+          <h2 style={{ 
+            color: '#333333',
+            marginBottom: '2rem',
+            fontSize: '2rem',
+            fontWeight: '600'
+          }}>Add New Product</h2>
+
+          <form className="row g-4" onSubmit={submitHandler}>
+            {[
+              { name: 'name', label: 'Product Name', type: 'text', placeholder: 'Product Name', col: '6' },
+              { name: 'brand', label: 'Brand', type: 'text', placeholder: 'Enter your Brand', col: '6' },
+              { name: 'description', label: 'Description', type: 'text', placeholder: 'Add product description', col: '12' },
+              { name: 'price', label: 'Price', type: 'number', placeholder: 'Eg: ₹1000', col: '6' },
+              { name: 'stockQuantity', label: 'Stock Quantity', type: 'number', placeholder: 'Stock Remaining', col: '6' },
+              { name: 'releaseDate', label: 'Release Date', type: 'date', col: '6' }
+            ].map((field) => (
+              <div className={`col-md-${field.col}`} key={field.name}>
+                <label className="form-label" style={{ color: '#64748b', marginBottom: '0.5rem' }}>
+                  {field.label}
+                </label>
+                <input
+                  type={field.type}
+                  className="form-control"
+                  placeholder={field.placeholder}
+                  name={field.name}
+                  value={product[field.name]}
+                  onChange={handleInputChange}
+                  style={{
+                    height: '3rem',
+                    borderRadius: '10px',
+                    border: '2px solid #e2e8f0',
+                    padding: '0.75rem',
+                    fontSize: '1rem',
+                    transition: 'all 0.3s ease'
+                  }}
+                />
+              </div>
+            ))}
+
+            <div className="col-md-6">
+              <label className="form-label" style={{ color: '#64748b', marginBottom: '0.5rem' }}>
+                Category
               </label>
-              <input
-                type="number"
-                className="form-control"
-                placeholder="Eg: $100"
+              <select
+                className="form-select"
+                value={product.category}
                 onChange={handleInputChange}
-                value={product.rentalAmount}
-                name="rentalAmount"
-                id="rentalAmount"
+                name="category"
+                style={{
+                  height: '3rem',
+                  borderRadius: '10px',
+                  border: '2px solid #e2e8f0',
+                  padding: '0 0.75rem',
+                  fontSize: '1rem',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                <option value="">Select category</option>
+                <option value="Laptop">Laptop</option>
+                <option value="Headphone">Headphone</option>
+                <option value="Mobile">Mobile</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Toys">Toys</option>
+                <option value="Fashion">Fashion</option>
+              </select>
+            </div>
+
+            <div className="col-md-6">
+              <label className="form-label" style={{ color: '#64748b', marginBottom: '0.5rem' }}>
+                Product Image
+              </label>
+              <input 
+                className="form-control"
+                type="file"
+                onChange={handleImageChange}
+                style={{
+                  height: '3rem',
+                  borderRadius: '10px',
+                  border: '2px solid #e2e8f0',
+                  padding: '0.5rem 0.75rem',
+                  fontSize: '1rem'
+                }}
               />
             </div>
-          )}
-          <div className="col-12">
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </div>
-        </form>
+
+            <div className="col-12">
+              <div className="form-check" style={{ marginBottom: '1rem' }}>
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  name="productAvailable"
+                  checked={product.productAvailable}
+                  onChange={(e) => setProduct({ ...product, productAvailable: e.target.checked })}
+                  style={{ 
+                    borderRadius: '4px',
+                    border: '2px solid #e2e8f0'
+                  }}
+                />
+                <label className="form-check-label" style={{ color: '#64748b', marginLeft: '0.5rem' }}>
+                  Product Available
+                </label>
+              </div>
+
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  name="rental"
+                  checked={product.rental}
+                  onChange={handleCheckboxChange}
+                  style={{ 
+                    borderRadius: '4px',
+                    border: '2px solid #e2e8f0'
+                  }}
+                />
+                <label className="form-check-label" style={{ color: '#64748b', marginLeft: '0.5rem' }}>
+                  Rental Item
+                </label>
+              </div>
+            </div>
+
+            {product.rental && (
+              <div className="col-md-6">
+                <label className="form-label" style={{ color: '#64748b', marginBottom: '0.5rem' }}>
+                  Rental Amount (per day)
+                </label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder="Eg: ₹100"
+                  name="rentalAmount"
+                  value={product.rentalAmount}
+                  onChange={handleInputChange}
+                  style={{
+                    height: '3rem',
+                    borderRadius: '10px',
+                    border: '2px solid #e2e8f0',
+                    padding: '0.75rem',
+                    fontSize: '1rem',
+                    transition: 'all 0.3s ease'
+                  }}
+                />
+              </div>
+            )}
+
+            <div className="col-12" style={{ marginTop: '2rem' }}>
+              <button
+                type="submit"
+                style={{
+                  background: 'linear-gradient(135deg, rgb(23, 42, 165) 0%, rgb(114, 127, 190) 100%)',
+                  border: 'none',
+                  borderRadius: '10px',
+                  padding: '1rem 2rem',
+                  color: 'white',
+                  fontSize: '1rem',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(23, 42, 165, 0.2)'
+                }}
+              >
+                Add Product
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

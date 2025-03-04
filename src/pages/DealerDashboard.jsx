@@ -45,6 +45,7 @@ console.log(dealerid,username);
     } catch (error) {
       console.error('Error fetching dealer info:', error);
     }
+    
   };
 
   // Fetch products and dealer info when component mounts or when toggling between dealer and customer products
@@ -100,137 +101,219 @@ console.log(dealerid,username);
   };
 
   return (
-    <div className="dashboard-container">
-      {/* Background Image Section */}
-      <div 
-        className="shop-photo-background"
-        style={{
-          backgroundImage: dealerInfo?.shopPhotoData 
-            ? `url(data:${dealerInfo.shopPhotoType};base64,${dealerInfo.shopPhotoData})`
-            : 'none',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          height: '50vh',
-          position: 'relative'
-        }}
-      >
-        {/* Overlay with gradient */}
-        <div className="overlay">
-          <div className="dealer-info">
-            <h1>{username}</h1>
-            <p>{dealerInfo?.location}</p>
+    <div className="dashboard-container" style={{ padding: '2rem' }}>
+      {/* Header Section */}
+      <div className="row g-4 mb-4">
+        <div className="col-md-4">
+          <div style={{
+            background: 'white',
+            borderRadius: '20px',
+            padding: '2rem',
+            height: '100%',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+          }}>
+            <div className="dealer-info mb-4">
+              <h1 style={{ 
+                color: '#333333',
+                fontSize: '2.5rem',
+                fontWeight: '600',
+                marginBottom: '0.5rem'
+              }}>{username}</h1>
+              <p style={{
+                color: '#64748b',
+                fontSize: '1.1rem',
+                margin: 0
+              }}>{dealerInfo?.location}</p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="d-flex flex-column gap-3">
+              <button 
+                className="btn w-100" 
+                onClick={toggleView}
+                style={{
+                  background: 'linear-gradient(135deg, rgb(23, 42, 165) 0%, rgb(114, 127, 190) 100%)',
+                  color: 'white',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '10px',
+                  border: 'none',
+                  boxShadow: '0 4px 12px rgba(23, 42, 165, 0.2)'
+                }}>
+                <CheckCircle size={18} className="me-2" />
+                {viewCustomerProducts ? "Show Dealer Products" : "Approve Requests"}
+              </button>
+              <button 
+                className="btn w-100" 
+                onClick={handleSellItemClick}
+                style={{
+                  background: 'white',
+                  color: 'rgb(23, 42, 165)',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '10px',
+                  border: '2px solid rgb(23, 42, 165)'
+                }}>
+                <Package size={18} className="me-2" />
+                Upload Product
+              </button>
+              <button 
+                className="btn w-100" 
+                onClick={() => setShowAddModal(true)}
+                style={{
+                  background: 'white',
+                  color: 'rgb(23, 42, 165)',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '10px',
+                  border: '2px solid rgb(23, 42, 165)'
+                }}>
+                <Package size={18} className="me-2" />
+                Sell Item
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-8">
+          <div style={{
+            height: '100%',
+            borderRadius: '20px',
+            overflow: 'hidden',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+          }}>
+            <img 
+              src={dealerInfo?.shopPhotoData ? 
+                `data:${dealerInfo.shopPhotoType};base64,${dealerInfo.shopPhotoData}` : 
+                'placeholder-image-url'} 
+              alt="Shop"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                borderRadius: '20px'
+              }}
+            />
           </div>
         </div>
       </div>
 
-      {/* Content Section */}
-      <div className="dashboard-content">
-        {/* Action Buttons */}
-        <div className="action-buttons mb-4">
-          <button className="btn btn-primary me-2" onClick={toggleView}>
-            <CheckCircle size={18} className="me-1" />
-            {viewCustomerProducts ? "Show Dealer Products" : "Approve Requests"}
-          </button>
-          <button className="btn btn-success me-2" onClick={handleSellItemClick}>
-            <Package size={18} className="me-1" />
-            Upload Product
-          </button>
-          <button className="btn btn-info" onClick={() => setShowAddModal(true)}>
-            <Package size={18} className="me-1" />
-            Sell Item
-          </button>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="stats-cards">
-          <div className="stat-card">
-            <Package size={24} className="text-primary" />
-            <h3>Products Listed</h3>
-            <h2>{products.length}</h2>
-          </div>
-          <div className="stat-card">
-            <Inbox size={24} className="text-success" />
-            <h3>Recovered Items</h3>
-            <h2>{recieved}</h2>
-          </div>
-          <div className="stat-card">
-            <ShoppingBag size={24} className="text-info" />
-            <h3>Collected Items</h3>
-            <h2>0</h2>
+      {/* Stats Section */}
+      <div className="row g-4 mb-4">
+        <div className="col-md-4">
+          <div style={{
+            background: 'white',
+            borderRadius: '15px',
+            padding: '1.5rem',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+          }}>
+            <Package size={24} style={{ color: 'rgb(23, 42, 165)' }} />
+            <h3 style={{ fontSize: '1rem', color: '#64748b', marginTop: '0.5rem' }}>Products Listed</h3>
+            <h2 style={{ fontSize: '1.5rem', color: '#333333', marginBottom: 0 }}>{products.length}</h2>
           </div>
         </div>
+        <div className="col-md-4">
+          <div style={{
+            background: 'white',
+            borderRadius: '15px',
+            padding: '1.5rem',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+          }}>
+            <Inbox size={24} style={{ color: 'rgb(23, 42, 165)' }} />
+            <h3 style={{ fontSize: '1rem', color: '#64748b', marginTop: '0.5rem' }}>Recovered Items</h3>
+            <h2 style={{ fontSize: '1.5rem', color: '#333333', marginBottom: 0 }}>{recieved}</h2>
+          </div>
+        </div>
+        <div className="col-md-4">
+          <div style={{
+            background: 'white',
+            borderRadius: '15px',
+            padding: '1.5rem',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+          }}>
+            <ShoppingBag size={24} style={{ color: 'rgb(23, 42, 165)' }} />
+            <h3 style={{ fontSize: '1rem', color: '#64748b', marginTop: '0.5rem' }}>Collected Items</h3>
+            <h2 style={{ fontSize: '1.5rem', color: '#333333', marginBottom: 0 }}>0</h2>
+          </div>
+        </div>
+      </div>
 
-        {/* Products Table */}
-        <div className="products-section">
-          {products.length === 0 ? (
-            <div className="text-center py-5">
-              <Package size={48} className="text-muted mb-3" />
-              <h4>No products available</h4>
-              <p className="text-muted">
-                {viewCustomerProducts
-                  ? "No customer requests at the moment."
-                  : "Click the 'Sell Item' button to list your first product."}
-              </p>
-            </div>
-          ) : (
-            <div className="table-responsive">
-              <table className="table table-hover">
-                <thead>
-                  <tr>
-                    <th>Product Name</th>
-                    <th>Type</th>
-                    <th>{viewCustomerProducts ? "Description" : "Price"}</th>
-                    <th>Expiry Date</th>
-                    <th>{viewCustomerProducts ? "Customer Name" : "Description"}</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.map((product, index) => (
-                    <tr key={product.id || index}>
-                      <td>{product.name}</td>
-                      <td>{product.type}</td>
-                      <td>{viewCustomerProducts ? product.description : product.price}</td>
-                      <td>{product.expiryDate}</td>
-                      <td>{viewCustomerProducts ? product.custname : product.description}</td>
-                      <td>
-                        {!viewCustomerProducts ? (
+      {/* Products Table */}
+      <div style={{
+        background: 'white',
+        borderRadius: '20px',
+        padding: '2rem',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+      }}>
+        <h2 style={{ marginBottom: '2rem', color: '#333333' }}>
+          {viewCustomerProducts ? "Customer Requests" : "Your Products"}
+        </h2>
+        
+        {products.length === 0 ? (
+          <div className="text-center py-5">
+            <Package size={48} style={{ color: '#cbd5e1' }} className="mb-3" />
+            <h4 style={{ color: '#333333' }}>No products available</h4>
+            <p style={{ color: '#64748b' }}>
+              {viewCustomerProducts
+                ? "No customer requests at the moment."
+                : "Click the 'Sell Item' button to list your first product."}
+            </p>
+          </div>
+        ) : (
+          <div className="table-responsive">
+            <table className="table">
+              <thead>
+                <tr style={{ background: '#f8fafc' }}>
+                  <th style={{ padding: '1rem' }}>Product Name</th>
+                  <th style={{ padding: '1rem' }}>Type</th>
+                  <th style={{ padding: '1rem' }}>{viewCustomerProducts ? "Description" : "Price"}</th>
+                  <th style={{ padding: '1rem' }}>Expiry Date</th>
+                  <th style={{ padding: '1rem' }}>{viewCustomerProducts ? "Customer Name" : "Description"}</th>
+                  <th style={{ padding: '1rem' }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product, index) => (
+                  <tr key={product.id || index}>
+                    <td>{product.name}</td>
+                    <td>{product.type}</td>
+                    <td>{viewCustomerProducts ? product.description : product.price}</td>
+                    <td>{product.expiryDate}</td>
+                    <td>{viewCustomerProducts ? product.custname : product.description}</td>
+                    <td>
+                      {!viewCustomerProducts ? (
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => {
+                            handleDeleteProduct(product.id);
+                            increment();
+                          }}
+                        >
+                          <LucideDelete size={18} className="me-1" />
+                          Delete
+                        </button>
+                      ) : (
+                        <>
                           <button
                             className="btn btn-danger"
-                            onClick={() => {
-                              handleDeleteProduct(product.id);
-                              increment();
-                            }}
+                            onClick={() => handleDeleteProduct(product.id)}
                           >
                             <LucideDelete size={18} className="me-1" />
-                            Delete
+                            Reject
                           </button>
-                        ) : (
-                          <>
-                            <button
-                              className="btn btn-danger"
-                              onClick={() => handleDeleteProduct(product.id)}
-                            >
-                              <LucideDelete size={18} className="me-1" />
-                              Reject
-                            </button>
-                            <button
-                              className="btn btn-success ms-2"
-                              onClick={() => handleAcceptRequest(product.id)}
-                            >
-                              <ArrowRightIcon size={18} className="me-1" />
-                              Accept
-                            </button>
-                          </>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+                          <button
+                            className="btn btn-success ms-2"
+                            onClick={() => handleAcceptRequest(product.id)}
+                          >
+                            <ArrowRightIcon size={18} className="me-1" />
+                            Accept
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Modal */}

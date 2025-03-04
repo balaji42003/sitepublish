@@ -2,27 +2,60 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 
-function AddProductModal({ show, onClose, isDealer,setRefresh,customerId,customerName,dealerid ,setCrefresh}) {
+function AddProductModal({ show, onClose, isDealer, setRefresh, customerId, customerName, dealerid, setCrefresh }) {
   const [product, setProduct] = useState({
     name: '',
     type: '',
     expiryDate: '',
-    price: '',       // For dealer only
+    price: '',
     description: '',
-    customerName: '', // For dealer only
-    customerPhone: '', // For dealer only
-    customerEmail: '' // For dealer only
+    customerName: '',
+    customerPhone: '',
+    customerEmail: ''
   });
 
-  const [error, setError] = useState(null);  // To handle errors
-  const [loading, setLoading] = useState(false);  // To manage loading state
-  const location = useLocation();  
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
+  // Handle backdrop click
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProduct(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-
-
-  
+  // Update form mapping to use handleInputChange
+  const formFields = [
+    { label: 'Product Name', type: 'text', name: 'name' },
+    { 
+      label: 'Product Type',
+      type: 'select',
+      name: 'type',
+      options: [
+        { value: '', label: 'Select type' },
+        { value: 'laptop', label: 'Laptop' },
+        { value: 'smartphone', label: 'Smartphone' },
+        { value: 'tablet', label: 'Tablet' },
+        { value: 'other', label: 'Other' }
+      ]
+    },
+    { label: 'Expiry Date', type: 'date', name: 'expiryDate' },
+    ...(isDealer ? [{ label: 'Price', type: 'number', name: 'price' }] : []),
+    { label: 'Description', type: 'textarea', name: 'description' },
+    ...(isDealer ? [
+      { label: 'Customer Name', type: 'text', name: 'customerName' },
+      { label: 'Customer Phone', type: 'tel', name: 'customerPhone' },
+      { label: 'Customer Email', type: 'email', name: 'customerEmail' }
+    ] : [])
+  ];
 
   // Handle the form submit
   const handleSubmit = async (e) => {
@@ -110,126 +143,201 @@ function AddProductModal({ show, onClose, isDealer,setRefresh,customerId,custome
   if (!show) return null;
 
   return (
-    <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">{isDealer ? 'Add Product for Sale' : 'Add Product for Recycling'}</h5>
-            <button type="button" className="btn-close" onClick={onClose}></button>
+    <div 
+      className="modal-backdrop" 
+      onClick={handleBackdropClick}
+      style={{ 
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        backdropFilter: 'blur(5px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1050
+      }}
+    >
+      <div 
+        className="modal-content"
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '20px',
+          width: '90%',
+          maxWidth: '500px',
+          maxHeight: '80vh', // Add max height
+          boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+          backdropFilter: 'blur(10px)',
+          border: 'none',
+          overflow: 'hidden',
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
+        {/* Fixed Header */}
+        <div style={{
+          background: 'linear-gradient(135deg, rgb(23, 42, 165) 0%, rgb(114, 127, 190) 100%)',
+          padding: '1.5rem',
+          color: 'white',
+          position: 'sticky',
+          top: 0,
+          zIndex: 1
+        }}>
+          <div className="d-flex justify-content-between align-items-center">
+            <h5 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '600' }}>
+              {isDealer ? 'Add Product for Sale' : 'Add Product for Recycling'}
+            </h5>
+            <button 
+              type="button" 
+              className="btn-close btn-close-white"
+              onClick={onClose}
+              style={{ opacity: 0.8, cursor: 'pointer' }}
+            />
           </div>
-          <div className="modal-body">
-            <form onSubmit={handleSubmit}>
-              <div className="mb-3">
-                <label className="form-label">Product Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={product.name}
-                  onChange={(e) => setProduct({ ...product, name: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Product Type</label>
-                <select
-                  className="form-select"
-                  value={product.type}
-                  onChange={(e) => setProduct({ ...product, type: e.target.value })}
-                  required
-                >
-                  <option value="">Select type</option>
-                  <option value="laptop">Laptop</option>
-                  <option value="smartphone">Smartphone</option>
-                  <option value="tablet">Tablet</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Expiry Date</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  value={product.expiryDate}
-                  onChange={(e) => setProduct({ ...product, expiryDate: e.target.value })}
-                  required
-                />
-              </div>
-              {isDealer && (
-                <div className="mb-3">
-                  <label className="form-label">Price</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    value={product.price}
-                    onChange={(e) => setProduct({ ...product, price: e.target.value })}
+        </div>
+
+        {/* Scrollable Form Area */}
+        <div style={{ 
+          padding: '2rem',
+          overflowY: 'auto',
+          maxHeight: 'calc(80vh - 140px)', // Adjust based on header and footer height
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#cbd5e1 transparent'
+        }}>
+          <form onSubmit={handleSubmit}>
+            {formFields.map((field, index) => (
+              <div className="mb-3" key={index}>
+                <label className="form-label" style={{ color: '#64748b', marginBottom: '0.5rem' }}>
+                  {field.label}
+                </label>
+                {field.type === 'select' ? (
+                  <select
+                    name={field.name}
+                    className="form-select"
+                    value={product[field.name]}
+                    onChange={handleInputChange}
                     required
+                    style={{
+                      height: '3rem',
+                      borderRadius: '10px',
+                      border: '2px solid #e2e8f0',
+                      padding: '0 0.75rem',
+                      fontSize: '1rem',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {field.options.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                ) : field.type === 'textarea' ? (
+                  <textarea
+                    name={field.name}
+                    className="form-control"
+                    value={product[field.name]}
+                    onChange={handleInputChange}
+                    required
+                    style={{
+                      borderRadius: '10px',
+                      border: '2px solid #e2e8f0',
+                      padding: '0.75rem',
+                      fontSize: '1rem',
+                      transition: 'all 0.3s ease',
+                      minHeight: '100px'
+                    }}
                   />
-                </div>
-              )}
-              <div className="mb-3">
-                <label className="form-label">Description</label>
-                <textarea
-                  className="form-control"
-                  value={product.description}
-                  onChange={(e) => setProduct({ ...product, description: e.target.value })}
-                  required
-                ></textarea>
-              </div>
-              {isDealer && (
-                <>
-                  <div className="mb-3">
-                    <label className="form-label">Customer Name</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={product.customerName}
-                      onChange={(e) => setProduct({ ...product, customerName: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Customer Phone</label>
-                    <input
-                      type="tel"
-                      className="form-control"
-                      value={product.customerPhone}
-                      onChange={(e) => setProduct({ ...product, customerPhone: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Customer Email</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      value={product.customerEmail}
-                      onChange={(e) => setProduct({ ...product, customerEmail: e.target.value })}
-                      required
-                    />
-                  </div>
-                </>
-              )}
-              <div className="modal-footer">
-                {loading ? (
-                  <button type="button" className="btn btn-primary" disabled>
-                    Loading...
-                  </button>
                 ) : (
-                  <button type="submit" className="btn btn-primary">
-                    Add Product
-                  </button>
+                  <input
+                    type={field.type}
+                    name={field.name}
+                    className="form-control"
+                    value={product[field.name]}
+                    onChange={handleInputChange}
+                    required
+                    style={{
+                      height: '3rem',
+                      borderRadius: '10px',
+                      border: '2px solid #e2e8f0',
+                      padding: '0.75rem',
+                      fontSize: '1rem',
+                      transition: 'all 0.3s ease'
+                    }}
+                  />
                 )}
-                <button type="button" className="btn btn-secondary" onClick={onClose}>
-                  Close
-                </button>
               </div>
-            </form>
-            {error && (
-              <div className="alert alert-danger mt-3">
-                {error}
-              </div>
-            )}
-          </div>
+            ))}
+
+            <div className="d-flex gap-3 mt-4">
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  background: loading ? '#cbd5e1' : 'linear-gradient(135deg, rgb(23, 42, 165) 0%, rgb(114, 127, 190) 100%)',
+                  border: 'none',
+                  borderRadius: '10px',
+                  padding: '0.75rem 1.5rem',
+                  color: 'white',
+                  fontSize: '1rem',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(23, 42, 165, 0.2)',
+                  flex: 1,
+                  cursor: 'pointer'
+                }}
+              >
+                {loading ? 'Loading...' : 'Add Product'}
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                style={{
+                  background: 'transparent',
+                  border: '2px solid rgb(23, 42, 165)',
+                  borderRadius: '10px',
+                  padding: '0.75rem 1.5rem',
+                  color: 'rgb(23, 42, 165)',
+                  fontSize: '1rem',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease',
+                  flex: 1,
+                  cursor: 'pointer'
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </form>
+
+          {error && (
+            <div style={{
+              background: '#fff1f2',
+              color: '#e11d48',
+              padding: '1rem',
+              borderRadius: '10px',
+              marginTop: '1.5rem',
+              fontSize: '0.9rem'
+            }}>
+              {error}
+            </div>
+          )}
+        </div>
+
+        {/* Fixed Footer/Buttons */}
+        <div style={{
+          padding: '1rem 2rem',
+          borderTop: '1px solid #e2e8f0',
+          background: 'white',
+          position: 'sticky',
+          bottom: 0,
+          zIndex: 1
+        }}>
+          
         </div>
       </div>
     </div>

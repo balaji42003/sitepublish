@@ -16,7 +16,7 @@ function Navbar() {
     <nav 
       className="navbar navbar-expand-lg navbar-dark sticky-top"
       style={{
-        background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)',
+        background: 'linear-gradient(135deg,rgb(22, 83, 196) 0%,rgb(60, 173, 102) 100%)',
         borderBottom: '1px solid rgba(255,255,255,0.1)'
       }}
     >

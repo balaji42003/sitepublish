@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 const Checkout = ({ cart, clearCart }) => {
   const [address, setAddress] = useState({
@@ -102,146 +103,175 @@ const Checkout = ({ cart, clearCart }) => {
   };
 
   return (
-    <div className="container py-5">
-      <button onClick={() => navigate(-1)} className="btn btn-warning mt-5">
-        Back to Previous Page
-      </button>
-      <h2 className="mb-4">Checkout</h2>
-      {rentalDetails ? (
-        <div className="card">
-          <div className="card-body">
-            <h4 className="card-title">Rental Details</h4>
-            <hr />
-            <div className="mb-3">
-              <label className="form-label">Product Name</label>
-              <p className="form-control-plaintext">{rentalDetails.product.name}</p>
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Rental Duration (days)</label>
-              <p className="form-control-plaintext">{rentalDetails.rentalDuration}</p>
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Total Rental Amount</label>
-              <p className="form-control-plaintext">₹{rentalDetails.totalRentalAmount}</p>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="card">
-          <div className="card-body">
-            <h4 className="card-title">Cart Details</h4>
-            <hr />
-            {cart.map((item) => (
-              <div key={item.id} className="mb-3">
-                <label className="form-label">{item.name}</label>
-                <p className="form-control-plaintext">Quantity: {item.quantity}</p>
-                <p className="form-control-plaintext">Price: ₹{item.price}</p>
+    <div style={{
+      background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
+      minHeight: '100vh',
+      padding: '2rem 0'
+    }}>
+      <div className="container">
+        <button 
+          onClick={() => navigate(-1)} 
+          className="btn"
+          style={{
+            border: '2px solid rgb(23, 42, 165)',
+            color: 'rgb(23, 42, 165)',
+            padding: '0.75rem 1.5rem',
+            borderRadius: '10px',
+            transition: 'all 0.3s ease',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            marginBottom: '2rem'
+          }}
+        >
+          <ArrowLeft size={18} />
+          Back
+        </button>
+
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '20px',
+          padding: '2rem',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+          backdropFilter: 'blur(10px)',
+          marginBottom: '2rem'
+        }}>
+          <h2 style={{ 
+            color: '#333333',
+            marginBottom: '2rem',
+            fontSize: '2rem',
+            fontWeight: '600'
+          }}>Checkout</h2>
+
+          {rentalDetails ? (
+            <div style={{
+              border: '2px solid #e2e8f0',
+              borderRadius: '15px',
+              padding: '1.5rem',
+              marginBottom: '2rem'
+            }}>
+              <h4 style={{ color: '#333333', marginBottom: '1.5rem' }}>Rental Details</h4>
+              <hr style={{ margin: '1rem 0' }} />
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <label className="form-label" style={{ color: '#64748b' }}>Product Name</label>
+                  <p style={{ color: '#333333', fontWeight: '500' }}>{rentalDetails.product.name}</p>
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label" style={{ color: '#64748b' }}>Rental Duration</label>
+                  <p style={{ color: '#333333', fontWeight: '500' }}>{rentalDetails.rentalDuration} days</p>
+                </div>
+                <div className="col-md-12">
+                  <label className="form-label" style={{ color: '#64748b' }}>Total Amount</label>
+                  <p style={{ color: 'rgb(23, 42, 165)', fontWeight: '600', fontSize: '1.25rem' }}>
+                    ₹{rentalDetails.totalRentalAmount}
+                  </p>
+                </div>
               </div>
-            ))}
-            <div className="mb-3">
-              <label className="form-label">Total Amount</label>
-              <p className="form-control-plaintext">₹{cart.reduce((total, item) => total + (item.price * item.quantity), 0)}</p>
             </div>
-          </div>
+          ) : (
+            <div style={{
+              border: '2px solid #e2e8f0',
+              borderRadius: '15px',
+              padding: '1.5rem',
+              marginBottom: '2rem'
+            }}>
+              <h4 style={{ color: '#333333', marginBottom: '1.5rem' }}>Order Summary</h4>
+              <hr style={{ margin: '1rem 0' }} />
+              {cart.map((item) => (
+                <div key={item.id} className="d-flex justify-content-between align-items-center mb-3">
+                  <div>
+                    <h6 style={{ color: '#333333', marginBottom: '0.25rem' }}>{item.name}</h6>
+                    <p style={{ color: '#64748b', margin: 0 }}>Quantity: {item.quantity}</p>
+                  </div>
+                  <p style={{ color: 'rgb(23, 42, 165)', fontWeight: '500', margin: 0 }}>
+                    ₹{item.price * item.quantity}
+                  </p>
+                </div>
+              ))}
+              <hr style={{ margin: '1rem 0' }} />
+              <div className="d-flex justify-content-between align-items-center">
+                <h5 style={{ color: '#333333', margin: 0 }}>Total</h5>
+                <h5 style={{ color: 'rgb(23, 42, 165)', margin: 0 }}>
+                  ₹{cart.reduce((total, item) => total + (item.price * item.quantity), 0)}
+                </h5>
+              </div>
+            </div>
+          )}
+
+          <h4 style={{ color: '#333333', marginBottom: '1.5rem' }}>Shipping Details</h4>
+          <form onSubmit={handleSubmit}>
+            <div className="row g-3">
+              {[
+                { name: 'name', label: 'Full Name', type: 'text' },
+                { name: 'email', label: 'Email Address', type: 'email' },
+                { name: 'phone', label: 'Phone Number', type: 'text' },
+                { name: 'addressLine1', label: 'Address Line 1', type: 'text' },
+                { name: 'addressLine2', label: 'Address Line 2', type: 'text' },
+                { name: 'city', label: 'City', type: 'text' },
+                { name: 'state', label: 'State', type: 'text' },
+                { name: 'zip', label: 'ZIP Code', type: 'text' }
+              ].map((field) => (
+                <div className="col-md-6" key={field.name}>
+                  <label className="form-label" style={{ color: '#64748b' }}>{field.label}</label>
+                  <input
+                    type={field.type}
+                    name={field.name}
+                    value={address[field.name]}
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required={field.name !== 'addressLine2'}
+                    style={{
+                      height: '3rem',
+                      borderRadius: '10px',
+                      border: '2px solid #e2e8f0',
+                      padding: '0.75rem',
+                      fontSize: '1rem',
+                      transition: 'all 0.3s ease'
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="d-flex gap-3 mt-4">
+              <button
+                type="button"
+                onClick={handlePayment}
+                style={{
+                  background: 'linear-gradient(135deg, rgb(23, 42, 165) 0%, rgb(114, 127, 190) 100%)',
+                  border: 'none',
+                  borderRadius: '10px',
+                  padding: '1rem 2rem',
+                  color: 'white',
+                  fontSize: '1rem',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(23, 42, 165, 0.2)'
+                }}
+              >
+                Pay Online
+              </button>
+              <button
+                type="button"
+                onClick={handleCOD}
+                style={{
+                  background: 'transparent',
+                  border: '2px solid rgb(23, 42, 165)',
+                  borderRadius: '10px',
+                  padding: '1rem 2rem',
+                  color: 'rgb(23, 42, 165)',
+                  fontSize: '1rem',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Cash on Delivery
+              </button>
+            </div>
+          </form>
         </div>
-      )}
-     
-      <form className="mt-4" onSubmit={handleSubmit}>
-        <h2 className="mb-4">Shipping details</h2>
-        <div className="mb-3">
-          <label className="form-label">Name</label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={address.name}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            name="email"
-            value={address.email}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Phone</label>
-          <input
-            type="text"
-            className="form-control"
-            name="phone"
-            value={address.phone}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Address Line 1</label>
-          <input
-            type="text"
-            className="form-control"
-            name="addressLine1"
-            value={address.addressLine1}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Address Line 2</label>
-          <input
-            type="text"
-            className="form-control"
-            name="addressLine2"
-            value={address.addressLine2}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">City</label>
-          <input
-            type="text"
-            className="form-control"
-            name="city"
-            value={address.city}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">State</label>
-          <input
-            type="text"
-            className="form-control"
-            name="state"
-            value={address.state}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Zip</label>
-          <input
-            type="text"
-            className="form-control"
-            name="zip"
-            value={address.zip}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <button type="button" className="btn btn-primary me-2" onClick={handlePayment}>
-          Confirm Payment
-        </button>
-        <button type="button" className="btn btn-secondary" onClick={handleCOD}>
-          Cash on Delivery
-        </button>
-      </form>
+      </div>
     </div>
   );
 };
