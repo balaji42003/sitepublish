@@ -16,6 +16,8 @@ import Checkout from './components/Checkout';
 import Rent from './Rent';
 import MyOrders from './pages/MyOrders'; // Correct import path
 import Sellitem from './Sellitem';
+import Footer from './components/Footer';
+import AboutUs from './pages/AboutUs';
 
 function App() {
   const [cart, setCart] = useState(() => {
@@ -81,14 +83,18 @@ function App() {
           />
           <Route path="/sell" element={<Sellitem />} />
           <Route path="/rent-item" element={<RentItem />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route path="/view" element={<View addToCart={addToCart} />} />
           <Route path="/cart" element={<Cart cart={cart} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />} />
           <Route path="/checkout" element={<Checkout cart={cart} clearCart={clearCart} />} />
           <Route path="/rent" element={<Rent />} /> {/* Add the new route */}
           <Route path="/my-orders" element={<MyOrders />} /> {/* Add the new MyOrders route */}
         </Routes>
+        <Footer/>
       </div>
+      
     </Router>
+    
   );
 }
 

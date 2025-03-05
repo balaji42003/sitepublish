@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Briefcase, CheckCircle, Inbox, Package, ShoppingBag, UserCheck2Icon, LucideDelete, ArrowRightIcon } from 'lucide-react';
+import { Briefcase, CheckCircle, Inbox, Package, ShoppingBag, UserCheck2Icon, LucideDelete, ArrowRightIcon, LogOut, LogOutIcon } from 'lucide-react';
 import AddProductModal from '../components/AddProductModal';
 import axios from 'axios';
 import '../DealerDashboard.css';
@@ -110,18 +110,49 @@ function DealerDashboard() {
             height: '100%',
             boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
           }}>
-            <div className="dealer-info mb-4">
-              <h1 style={{
-                color: '#333333',
-                fontSize: '2.5rem',
-                fontWeight: '600',
-                marginBottom: '0.5rem'
-              }}>{username}</h1>
-              <p style={{
-                color: '#64748b',
-                fontSize: '1.1rem',
-                margin: 0
-              }}>{dealerInfo?.location}</p>
+            <div className="dealer-info mb-4 d-flex justify-content-between align-items-start">
+              <div>
+                <h1 style={{
+                  color: '#333333',
+                  fontSize: '2.5rem',
+                  fontWeight: '600',
+                  marginBottom: '0.5rem'
+                }}>{username}</h1>
+                <p style={{
+                  color: '#64748b',
+                  fontSize: '1.1rem',
+                  margin: 0
+                }}>{dealerInfo?.location}</p>
+              </div>
+              
+              <button
+                onClick={() => navigate('/')}
+                style={{
+                  background: 'transparent',
+                  border: '2px solid #dc3545',
+                  color: '#dc3545',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '10px',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseOver={e => {
+                  e.target.style.background = '#dc3545';
+                  e.target.style.color = 'white';
+                }}
+                onMouseOut={e => {
+                  e.target.style.background = 'transparent';
+                  e.target.style.color = '#dc3545';
+                }}
+              >
+                <LogOutIcon size={18} />
+                Logout
+              </button>
             </div>
 
             {/* Action Buttons */}

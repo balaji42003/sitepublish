@@ -81,7 +81,7 @@ function CustomerDashboard({ cart = [], addToCart, updateQuantity, removeFromCar
       <div 
         className="position-relative rounded-bottom shadow-lg mb-4"
         style={{
-          background: 'linear-gradient(135deg, #6B73FF 0%, #000DFF 100%)',
+          background: 'linear-gradient(135deg,rgb(89, 96, 246) 0%,rgb(0, 255, 98) 100%)',
           height: '25vh',
           marginBottom: '-50px'
         }}

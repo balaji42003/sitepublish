@@ -132,7 +132,7 @@ function Home() {
 
       {/* Call to Action Section */}
       <div style={{
-        background: 'linear-gradient(135deg, #155799 0%, #159957 100%)',
+        background: 'linear-gradient(135deg,rgb(24, 123, 223) 0%,rgb(142, 223, 181) 100%)',
         padding: '6rem 0',
         marginTop: '4rem'
       }}>
