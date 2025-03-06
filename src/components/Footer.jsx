@@ -7,7 +7,7 @@ const Footer = () => {
     { Icon: Facebook, link: '#' },
     { Icon: Twitter, link: '#' },
     { Icon: Instagram, link: '#' },
-    { Icon: Github, link: '#' }, // Replaced LinkedIn with Github
+    { Icon: Github, link: '#' },
     { Icon: Youtube, link: '#' }
   ];
 
@@ -39,7 +39,7 @@ const Footer = () => {
             <h5 className="mb-3">Quick Links</h5>
             <ul className="list-unstyled" style={{ opacity: 0.8 }}>
               <li className="mb-2">
-                <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>Home</Link>
+                <Link to="/sitepublish" style={{ color: 'white', textDecoration: 'none' }}>Home</Link>
               </li>
               <li className="mb-2">
                 <Link to="/about" style={{ color: 'white', textDecoration: 'none' }}>About Us</Link>
@@ -48,7 +48,7 @@ const Footer = () => {
                 <Link to="/services" style={{ color: 'white', textDecoration: 'none' }}>Services</Link>
               </li>
               <li className="mb-2">
-                <Link to="/contact" style={{ color: 'white', textDecoration: 'none' }}>Contact</Link>
+                <Link to="/contact-us" style={{ color: 'white', textDecoration: 'none' }}>Contact Us</Link>
               </li>
             </ul>
           </div>
@@ -63,11 +63,12 @@ const Footer = () => {
               </li>
               <li className="mb-2 d-flex align-items-center">
                 <Phone size={18} style={{ marginRight: '10px' }} />
-                +1 (234) 567-8900
+                +91 6303890919
+                +91 6304565953
               </li>
               <li className="mb-2 d-flex align-items-center">
                 <Mail size={18} style={{ marginRight: '10px' }} />
-                info@recycleconnect.com
+                maruthikumar244@gmail.com
               </li>
             </ul>
           </div>

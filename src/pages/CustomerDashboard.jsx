@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Package, Plus, Recycle, ShoppingBasket, User, ShoppingCart } from 'lucide-react';
+import { Package, Plus, Recycle, ShoppingBasket, User, ShoppingCart, LogOutIcon } from 'lucide-react';
 import AddProductModal from '../components/AddProductModal';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 
@@ -45,6 +45,11 @@ function CustomerDashboard({ cart = [], addToCart, updateQuantity, removeFromCar
 
   const handleNavigate = () => {
     navigate("/view", { state: { id, username } });
+  };
+
+  const handleLogout = () => {
+    // Clear any authentication tokens or user data here
+    navigate('/customer-login');
   };
 
   // Check for authentication
@@ -143,6 +148,35 @@ function CustomerDashboard({ cart = [], addToCart, updateQuantity, removeFromCar
                     <Package size={20} className="me-2" />
                     My Orders
                   </Link>
+                  <button
+                    className="btn btn-danger btn-lg hover-scale"
+                    onClick={handleLogout}
+                    style={{
+                      background: 'transparent',
+                      border: '2px solid #dc3545',
+                      color: '#dc3545',
+                      padding: '0.75rem 1.5rem',
+                      borderRadius: '10px',
+                      fontSize: '1rem',
+                      fontWeight: '500',
+                      transition: 'all 0.3s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      cursor: 'pointer'
+                    }}
+                    onMouseOver={e => {
+                      e.target.style.background = '#dc3545';
+                      e.target.style.color = 'white';
+                    }}
+                    onMouseOut={e => {
+                      e.target.style.background = 'transparent';
+                      e.target.style.color = '#dc3545';
+                    }}
+                  >
+                    <LogOutIcon size={18} />
+                    Logout
+                  </button>
                 </div>
               </div>
             </div>

@@ -5,6 +5,20 @@ import './ContactUs.css'; // Import the CSS file for animations
 function ContactUs() {
   return (
     <div style={{ backgroundColor: '#f8f9fa' }}>
+      <style>
+        {`
+          @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+          }
+
+          @keyframes openClose {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.8); }
+          }
+        `}
+      </style>
       {/* Hero Section */}
       <div className="hero-section">
         <div className="container text-center position-relative" style={{ zIndex: 1 }}>
@@ -14,6 +28,14 @@ function ContactUs() {
           <p className="lead text-white mb-5" style={{ fontSize: '1.3rem', maxWidth: '800px', margin: '0 auto' }}>
             Have questions or want to learn more about our services? Contact us today and our team will be happy to assist you.
           </p>
+        </div>
+        {/* Floating Icons */}
+        <div className="floating-icon phone-icon" style={{ position: 'absolute', top: '150px', left: '40px', fontSize: '100px',paddingLeft: '7rem', color: 'green', animation: 'shake 1s infinite' }}>
+                       ☏
+          
+        </div>
+        <div className="floating-icon letter-icon" style={{ position: 'absolute', bottom: '30px', right: '50px', fontSize: '200px', color: 'white', animation: 'openClose 2s infinite' }}>
+          ✉️
         </div>
       </div>
 

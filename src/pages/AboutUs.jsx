@@ -2,50 +2,63 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import RecycleLogo from '../Recyclelogo.jpg'; // Import the image
 
 const AboutUs = () => {
   return (
     <div style={{ backgroundColor: '#f8f9fa' }}>
+      <style>
+        {`
+          @keyframes rotateClockwise {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+
+          @keyframes rotateEarth {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}
+      </style>
       {/* Hero Section */}
       <div
-  style={{
-    background: 'linear-gradient(135deg , rgba(29, 84, 213, 0.6) 60%, rgba(17, 191, 40, 0.48) 20%)',
-    height: '450px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    overflow: 'hidden'
-  }}
->
-  {/* Floating Icons */}
-  <div style={{ position: 'absolute', top: '100px', left: '40px', fontSize: '100px', color: 'green' , border:'none' }}>
-  🔌♻️
-  </div>
-  <div style={{ position: 'absolute', bottom: '30px', right: '50px', fontSize: '300px', color: 'white' }}>
-    🌍
-  </div>
-  
-  <div className="container text-center position-relative" style={{ zIndex: 1 }}>
-    <h1 className="display-3 text-white fw-bold mb-4" style={{ letterSpacing: '-1px' }}>
-      About Us
-    </h1>
-    <p className="lead text-white mb-4" style={{ fontSize: '1.3rem', maxWidth: '800px', margin: '0 auto' }}>
-      Learn more about our mission, vision, and the team behind Recycle Connect.
-    </p>
+        style={{
+          background: 'linear-gradient(135deg , rgba(29, 84, 213, 0.6) 60%, rgba(17, 191, 40, 0.48) 20%)',
+          height: '450px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+      >
+        {/* Floating Icons */}
+        <div style={{ position: 'absolute', top: '100px', left: '40px', fontSize: '100px', color: 'green', border: 'none', animation: 'rotateClockwise 10s linear infinite' }}>
+          ♻️
+        </div>
+        <div style={{ position: 'absolute', bottom: '30px', right: '50px', fontSize: '300px', color: 'white', animation: 'rotateEarth 20s linear infinite' }}>
+          🌍
+        </div>
 
-    {/* Additional Content */}
-    <p className="text-white mb-4" style={{ fontSize: '1.1rem', maxWidth: '700px', margin: '0 auto' }}>
-      Our goal is to make recycling accessible and effective for a greener future. Join us in making a difference!
-    </p>
+        <div className="container text-center position-relative" style={{ zIndex: 1 }}>
+          <h1 className="display-3 text-white fw-bold mb-4" style={{ letterSpacing: '-1px' }}>
+            About Us
+          </h1>
+          <p className="lead text-white mb-4" style={{ fontSize: '1.3rem', maxWidth: '800px', margin: '0 auto' }}>
+            Learn more about our mission, vision, and the team behind Recycle Connect.
+          </p>
 
-    {/* Call to Action Button */}
-    <a href="/contact" className="btn btn-light fw-bold px-4 py-2 shadow">
-      Get Involved
-    </a>
-  </div>
-</div>
+          {/* Additional Content */}
+          <p className="text-white mb-4" style={{ fontSize: '1.1rem', maxWidth: '700px', margin: '0 auto' }}>
+            Our goal is to make recycling accessible and effective for a greener future. Join us in making a difference!
+          </p>
 
+          {/* Call to Action Button */}
+          <a href="/contact" className="btn btn-light fw-bold px-4 py-2 shadow">
+            Get Involved
+          </a>
+        </div>
+      </div>
 
       {/* Mission and Vision Section */}
       <div className="container py-6">
@@ -107,11 +120,11 @@ const AboutUs = () => {
         <h2 className="display-4 fw-bold text-center mb-5">Meet Our Team</h2>
         <div className="row g-4">
           {[
-            { name: 'Gandala Balaji', role: 'CEO',  },
-            { name: 'Maruthi kumar', role: 'CTO',  },
-            { name: 'Darshini', role: 'CFO',  },
-            { name: 'Ashraf', role: 'CFO',  },
-            { name: 'Madhan Kumar ', role: 'COO',  }
+            { name: 'Gandala Balaji', role: 'CEO' },
+            { name: 'Maruthi kumar', role: 'CTO' },
+            { name: 'Darshini', role: 'CFO' },
+            { name: 'Ashraf', role: 'CFO' },
+            { name: 'Madhan Kumar', role: 'COO' }
           ].map((member, index) => (
             <div className="col-md-3" key={index}>
               <motion.div
@@ -121,7 +134,6 @@ const AboutUs = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.2 }}
               >
-               
                 <div className="card-body">
                   <h5 className="card-title">{member.name}</h5>
                   <p className="card-text text-muted">{member.role}</p>
@@ -146,7 +158,7 @@ const AboutUs = () => {
                 Have questions or want to learn more about our services? Contact us today and our team will be happy to assist you.
               </p>
               <Link 
-                to="/contact" 
+                to="/contact-us" 
                 className="btn btn-light btn-lg"
                 style={{
                   padding: '1rem 2rem',
@@ -161,8 +173,8 @@ const AboutUs = () => {
             </div>
             <div className="col-lg-5 mt-5 mt-lg-0">
               <motion.img
-                src="src\Recyclelogo.jpg"
-                alt="Contact"
+                src={RecycleLogo}
+                alt="contact-us"
                 className="img-fluid rounded-3 shadow-lg"
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}

@@ -6,41 +6,25 @@ function Home() {
   return (
     <div style={{ backgroundColor: '#f8f9fa' }}>
       {/* Hero Section with Gradient Background */}
-      <div style={{
-  background: 'linear-gradient(135deg , rgba(29, 84, 213, 0.6) 60%, rgba(17, 191, 40, 0.48) 20%)', // Lighter gradient
-  minHeight: '80vh',
-  display: 'flex',
-  alignItems: 'center',
-  position: 'relative',
-  overflow: 'hidden'
-}}>
-  <div style={{
-  background: 'url("https://images.unsplash.com/photo-1550376026-33cbee34f79e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80")',
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  backgroundRepeat: 'no-repeat',
-  minHeight: '80vh',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  position: 'relative',
-  overflow: 'hidden'
-}}>
-</div>
-
-
+      <div className="position-relative overflow-hidden" style={{
+        background: 'linear-gradient(135deg, rgba(29, 84, 213, 0.6) 60%, rgba(17, 191, 40, 0.48) 20%)',
+        minHeight: '80vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
         <div className="container text-center position-relative" style={{ zIndex: 1 }}>
-          <h1 className="display-3 text-white fw-bold mb-4" style={{ letterSpacing: '-1px' }}>
+          <h1 className="display-3 text-white fw-bold mb-4 animate__animated animate__fadeInDown" style={{ letterSpacing: '-1px' }}>
             Welcome to Recycle Connect
           </h1>
-          <p className="lead text-white mb-5" style={{ fontSize: '1.3rem', maxWidth: '800px', margin: '0 auto' }}>
+          <p className="lead text-white mb-5 animate__animated animate__fadeInUp" style={{ fontSize: '1.3rem', maxWidth: '800px', margin: '0 auto' }}>
             Join the revolution in e-waste management. Connect with certified dealers
             and contribute to a sustainable future.
           </p>
           <div className="d-flex justify-content-center gap-4">
             <Link 
               to="/customer-login" 
-              className="btn btn-primary btn-lg"
+              className="btn btn-primary btn-lg animate__animated animate__zoomIn"
               style={{
                 padding: '1rem 2rem',
                 borderRadius: '50px',
@@ -55,7 +39,7 @@ function Home() {
             </Link>
             <Link 
               to="/dealer-login" 
-              className="btn btn-outline-light btn-lg"
+              className="btn btn-outline-light btn-lg animate__animated animate__zoomIn"
               style={{
                 padding: '1rem 2rem',
                 borderRadius: '50px',
@@ -74,7 +58,7 @@ function Home() {
       <div className="container py-6" style={{ marginTop: '-100px' }}>
         <div className="row g-4">
           <div className="col-md-4">
-            <div className="card border-0 shadow-lg h-100" style={{
+            <div className="card border-0 shadow-lg h-100 animate__animated animate__fadeInUp" style={{
               borderRadius: '15px',
               transition: 'transform 0.3s ease',
               cursor: 'pointer'
@@ -104,11 +88,30 @@ function Home() {
             </div>
           </div>
           <div className="col-md-4">
-            <div className="card h-100">
-              <div className="card-body text-center">
-                <Cpu size={48} className="mb-3 text-primary" />
-                <h3 className="card-title">Certified Dealers</h3>
-                <p className="card-text">
+            <div className="card border-0 shadow-lg h-100 animate__animated animate__fadeInUp" style={{
+              borderRadius: '15px',
+              transition: 'transform 0.3s ease',
+              cursor: 'pointer',
+              animationDelay: '0.2s'
+            }}
+            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-10px)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              <div className="card-body text-center p-5">
+                <div style={{
+                  background: 'rgba(76, 175, 80, 0.1)',
+                  borderRadius: '50%',
+                  width: '80px',
+                  height: '80px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 1.5rem'
+                }}>
+                  <Cpu size={40} className="text-primary" />
+                </div>
+                <h3 className="h4 mb-3">Certified Dealers</h3>
+                <p className="text-muted mb-0">
                   Connect with verified dealers who follow strict environmental
                   guidelines.
                 </p>
@@ -116,11 +119,30 @@ function Home() {
             </div>
           </div>
           <div className="col-md-4">
-            <div className="card h-100">
-              <div className="card-body text-center">
-                <Smartphone size={48} className="mb-3 text-primary" />
-                <h3 className="card-title">Easy Process</h3>
-                <p className="card-text">
+            <div className="card border-0 shadow-lg h-100 animate__animated animate__fadeInUp" style={{
+              borderRadius: '15px',
+              transition: 'transform 0.3s ease',
+              cursor: 'pointer',
+              animationDelay: '0.4s'
+            }}
+            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-10px)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              <div className="card-body text-center p-5">
+                <div style={{
+                  background: 'rgba(76, 175, 80, 0.1)',
+                  borderRadius: '50%',
+                  width: '80px',
+                  height: '80px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 1.5rem'
+                }}>
+                  <Smartphone size={40} className="text-primary" />
+                </div>
+                <h3 className="h4 mb-3">Easy Process</h3>
+                <p className="text-muted mb-0">
                   Simple and streamlined process to dispose of your electronic
                   waste.
                 </p>
@@ -131,7 +153,7 @@ function Home() {
       </div>
 
       {/* Call to Action Section */}
-      <div style={{
+      <div className="animate__animated animate__fadeIn" style={{
         background: 'linear-gradient(135deg,rgb(24, 123, 223) 0%,rgb(142, 223, 181) 100%)',
         padding: '6rem 0',
         marginTop: '4rem'
