@@ -24,7 +24,7 @@ function Navbar() {
         {/* Brand Logo and Name */}
         <Link 
           className="navbar-brand d-flex align-items-center" 
-          to="/"
+          to="/sitepublish/"
           style={{
             fontSize: '1.4rem',
             padding: '0.5rem 0'

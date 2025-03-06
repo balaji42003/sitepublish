@@ -54,9 +54,11 @@ const AboutUs = () => {
           </p>
 
           {/* Call to Action Button */}
-          <a href="/contact" className="btn btn-light fw-bold px-4 py-2 shadow">
+          <Link to={"/customer-login"}>
+          <a className="btn btn-light fw-bold px-4 py-2 shadow">
             Get Involved
           </a>
+          </Link>
         </div>
       </div>
 
