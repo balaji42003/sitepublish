@@ -85,7 +85,7 @@ function Navbar() {
             <li className="nav-item mx-1">
               <Link 
                 className="nav-link px-3 py-2 d-flex align-items-center"
-                to="/"
+                to="/sitepublish/"
                 style={{
                   borderRadius: '8px',
                   transition: 'all 0.3s ease'
