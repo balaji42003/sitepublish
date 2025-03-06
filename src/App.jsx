@@ -18,6 +18,11 @@ import MyOrders from './pages/MyOrders'; // Correct import path
 import Sellitem from './Sellitem';
 import Footer from './components/Footer';
 import AboutUs from './pages/AboutUs';
+import MyOrders from './pages/MyOrders';
+import Sellitem from './Sellitem';
+import Footer from './components/Footer';
+import AboutUs from './pages/AboutUs';
+import ContactUs from './pages/ContactUs'; // Import the new ContactUs page
 
 function App() {
   const [cart, setCart] = useState(() => {
@@ -94,7 +99,13 @@ function App() {
       </div>
       
     </Router>
-    
+          <Route path="/rent" element={<Rent />} />
+          <Route path="/my-orders" element={<MyOrders />} />
+          <Route path="/contact-us" element={<ContactUs />} /> {/* Add the new ContactUs route */}
+        </Routes>
+        <Footer/>
+      </div>
+    </Router>
   );
 }
 
