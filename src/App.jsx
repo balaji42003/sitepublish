@@ -14,10 +14,6 @@ import View from './View';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import Rent from './Rent';
-import MyOrders from './pages/MyOrders'; // Correct import path
-import Sellitem from './Sellitem';
-import Footer from './components/Footer';
-import AboutUs from './pages/AboutUs';
 import MyOrders from './pages/MyOrders';
 import Sellitem from './Sellitem';
 import Footer from './components/Footer';
@@ -92,13 +88,6 @@ function App() {
           <Route path="/view" element={<View addToCart={addToCart} />} />
           <Route path="/cart" element={<Cart cart={cart} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />} />
           <Route path="/checkout" element={<Checkout cart={cart} clearCart={clearCart} />} />
-          <Route path="/rent" element={<Rent />} /> {/* Add the new route */}
-          <Route path="/my-orders" element={<MyOrders />} /> {/* Add the new MyOrders route */}
-        </Routes>
-        <Footer/>
-      </div>
-      
-    </Router>
           <Route path="/rent" element={<Rent />} />
           <Route path="/my-orders" element={<MyOrders />} />
           <Route path="/contact-us" element={<ContactUs />} /> {/* Add the new ContactUs route */}
