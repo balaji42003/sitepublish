@@ -40,7 +40,7 @@ function ContactUs() {
       </div>
 
       {/* Contact Info Section */}
-      <div className="container py-6">
+      <div className="container py-6 mt-4">
         <div className="row g-4">
           <div className="col-lg-4">
             <div className="card border-0 shadow-lg h-100 contact-card">

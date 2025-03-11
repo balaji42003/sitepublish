@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Package, Plus, Recycle, ShoppingBasket, User, ShoppingCart, LogOutIcon } from 'lucide-react';
-import AddProductModal from '../components/AddProductModal';
+import { Package, Plus, Recycle, ShoppingBasket, ShoppingCart, LogOutIcon, User } from 'lucide-react';
+import CustomerResell from '../components/CustomerResell';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 
-function CustomerDashboard({ cart = [], addToCart, updateQuantity, removeFromCart, clearCart }) {
+function CustomerDashboard() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [crefresh, setCrefresh] = useState(false);
   const [products, setProducts] = useState([]);
@@ -30,19 +30,6 @@ function CustomerDashboard({ cart = [], addToCart, updateQuantity, removeFromCar
     }
   };
 
-  const fetchCartItems = async () => {
-    if (!id) return;
-    try {
-      const response = await axios.get(`http://localhost:8080/api/cart/${id}`);
-      if (response.data && Array.isArray(response.data)) {
-        clearCart?.(); // Clear existing cart items first
-        response.data.forEach(item => addToCart?.(item));
-      }
-    } catch (error) {
-      console.error('Error fetching cart items:', error);
-    }
-  };
-
   const handleNavigate = () => {
     navigate("/view", { state: { id, username } });
   };
@@ -64,7 +51,6 @@ function CustomerDashboard({ cart = [], addToCart, updateQuantity, removeFromCar
   useEffect(() => {
     if (username && id) {
       fetchProducts();
-      fetchCartItems();
     }
   }, [username, id, crefresh]); // Added proper dependencies
 
@@ -133,14 +119,6 @@ function CustomerDashboard({ cart = [], addToCart, updateQuantity, removeFromCar
                     Browse Products
                   </button>
                   <Link 
-                    to="/cart" 
-                    state={{ id, username }} 
-                    className="btn btn-info btn-lg text-white hover-scale"
-                  >
-                    <ShoppingCart size={20} className="me-2" />
-                    Cart ({cart?.length || 0})
-                  </Link>
-                  <Link 
                     to="/my-orders" 
                     state={{ id, username }} 
                     className="btn btn-secondary btn-lg hover-scale"
@@ -190,7 +168,7 @@ function CustomerDashboard({ cart = [], addToCart, updateQuantity, removeFromCar
               <div className="card-body p-4">
                 <div className="d-flex align-items-center mb-3">
                   <div className="p-3 rounded-circle bg-primary bg-opacity-10 me-3">
-                    <Package size={24} className="text-primary" />
+                    <ShoppingCart size={24} className="text-primary" />
                   </div>
                   <div>
                     <h3 className="h5 mb-1">Products Listed</h3>
@@ -248,6 +226,7 @@ function CustomerDashboard({ cart = [], addToCart, updateQuantity, removeFromCar
                       <th className="border-0">Product Name</th>
                       <th className="border-0">Type</th>
                       <th className="border-0">Expired Date</th>
+                      <th className="border-0">Photo</th>
                       <th className="border-0">Status</th>
                     </tr>
                   </thead>
@@ -257,6 +236,13 @@ function CustomerDashboard({ cart = [], addToCart, updateQuantity, removeFromCar
                         <td className="fw-medium">{product.name}</td>
                         <td>{product.type}</td>
                         <td>{product.expiryDate}</td>
+                        <td>
+                          {product.photoData ? (
+                            <img src={`data:${product.photoType};base64,${product.photoData}`} alt={product.name} style={{ width: '50px', height: '50px', objectFit: 'cover' }} />
+                          ) : (
+                            'No Photo'
+                          )}
+                        </td>
                         <td>
                           <span className={`badge ${
                             product.status === 'Approved' 
@@ -275,14 +261,12 @@ function CustomerDashboard({ cart = [], addToCart, updateQuantity, removeFromCar
           </div>
         </div>
 
-        <AddProductModal
+        <CustomerResell
           show={showAddModal}
           onClose={() => setShowAddModal(false)}
-          onSubmit={handleAddProduct}
-          isDealer={false}
+          setCrefresh={setCrefresh}
           customerId={id}
           customerName={username}
-          setCrefresh={setCrefresh}
         />
       </div>
     </div>

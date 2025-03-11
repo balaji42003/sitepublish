@@ -44,9 +44,7 @@ const Footer = () => {
               <li className="mb-2">
                 <Link to="/about" style={{ color: 'white', textDecoration: 'none' }}>About Us</Link>
               </li>
-              <li className="mb-2">
-                <Link to="/services" style={{ color: 'white', textDecoration: 'none' }}>Services</Link>
-              </li>
+
               <li className="mb-2">
                 <Link to="/contact-us" style={{ color: 'white', textDecoration: 'none' }}>Contact Us</Link>
               </li>
@@ -135,7 +133,7 @@ const Footer = () => {
                 <Link to="/privacy" style={{ color: 'white', textDecoration: 'none', marginRight: '1rem' }}>
                   Privacy Policy
                 </Link>
-                <Link to="/terms" style={{ color: 'white', textDecoration: 'none' }}>
+                <Link to="/sitepublish" style={{ color: 'white', textDecoration: 'none' }}>
                   Terms of Service
                 </Link>
               </div>

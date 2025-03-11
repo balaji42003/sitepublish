@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { ShoppingCart, Package, ArrowLeft } from "lucide-react";
+import { ShoppingCart, Package, ArrowLeft, EyeClosed, EyeIcon, ScanEyeIcon, EyeClosedIcon } from "lucide-react";
 import axios from "axios";
 import DealerInfoModal from "./components/DealerInfoModal";
 
@@ -199,9 +199,10 @@ const View = ({ addToCart, cart }) => {
                             <h5 className="card-title mb-0">{name}</h5>
                             <button
                               onClick={(e) => handleInfoClick(e, product)}
-                              className="btn btn-outline-success btn-sm rounded-circle"
+                              className="btn btn-sm"
                             >
                               <i className="bi bi-info"></i>
+                              <EyeClosedIcon size={18}/>
                             </button>
                           </div>
                           

@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Briefcase, CheckCircle, Inbox, Package, ShoppingBag, UserCheck2Icon, LucideDelete, ArrowRightIcon, LogOut, LogOutIcon } from 'lucide-react';
+import { CheckCircle, Inbox, Package, ShoppingBag, LucideDelete, ArrowRightIcon, LogOutIcon } from 'lucide-react';
 import AddProductModal from '../components/AddProductModal';
 import axios from 'axios';
 import '../DealerDashboard.css';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function DealerDashboard() {
   const [showAddModal, setShowAddModal] = useState(false);
-  const [sellitem, setSellitem] = useState(false);
   const [products, setProducts] = useState([]);
+  const [collectedItems, setCollectedItems] = useState([]);
   const [recieved, setRecieved] = useState(0);
   const [refresh, setRefresh] = useState(false);
   const [viewCustomerProducts, setViewCustomerProducts] = useState(false);
+  const [viewCollectedItems, setViewCollectedItems] = useState(false);
   const [dealerInfo, setDealerInfo] = useState(null);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
   const location = useLocation();
   const navigate = useNavigate();
   const username = location.state?.username;
@@ -31,6 +35,7 @@ function DealerDashboard() {
       console.error('Error fetching products:', error);
     }
   };
+
   const handleSellItemClick = () => {
     console.log(dealerid, username);
     navigate('/sell', { state: { dealerid, username } });
@@ -58,14 +63,16 @@ function DealerDashboard() {
     setRefresh((prev) => !prev); // Force refresh
   };
 
-  const increment = () => {
-    setRecieved(recieved + 1);
+  const toggleCollectedItemsView = () => {
+    setViewCollectedItems((prev) => !prev);
   };
 
   // Handle product deletion
   const handleDeleteProduct = async (productId) => {
     try {
       await axios.delete(`http://localhost:8080/delete/${productId}`);
+      setProducts((prevProducts) => prevProducts.filter((p) => p.id !== productId));
+      setRecieved((prev) => prev + 1); // Increment the count of recovered items
       setRefresh(!refresh); // Trigger refresh to update the product list
     } catch (error) {
       console.error('Error deleting product:', error);
@@ -73,21 +80,17 @@ function DealerDashboard() {
   };
 
   // Handle accepting a customer request
-  const handleAcceptRequest = async (productId) => {
-    try {
-      await axios.put(`http://localhost:8080/updateStatus/${productId}`, { status: 'Accepted' });
-      setProducts((prevProducts) =>
-        prevProducts.map((product) =>
-          product.id === productId ? { ...product, status: 'Accepted' } : product
-        )
-      );
-      setRefresh(!refresh); // Trigger refresh to update the product list
+  const handleAcceptRequest = (product) => {
+    // Update the product status to 'Accepted'
+    setProducts((prevProducts) =>
+      prevProducts.filter((p) => p.id !== product.id)
+    );
 
-      // Notify the customer side about the status update
-      await axios.post('http://localhost:8080/notifyCustomer', { productId, status: 'Accepted' });
-    } catch (error) {
-      console.error('Error accepting request:', error);
-    }
+    // Add the product to collected items
+    setCollectedItems((prevItems) => [...prevItems, { ...product, status: 'Accepted' }]);
+
+    // Increment the count of collected items
+    setRecieved((prev) => prev + 1);
   };
 
   // Handle adding a new product (called from AddProductModal)
@@ -96,6 +99,18 @@ function DealerDashboard() {
     setProducts((prevProducts) => [...prevProducts, newProduct]);
     setShowAddModal(false); // Close the modal after successful product addition
     setRefresh((prev) => !prev); // Refresh the product list
+  };
+
+  // Handle image click to show modal
+  const handleImageClick = (imageData, imageType) => {
+    setSelectedImage(`data:${imageType};base64,${imageData}`);
+    setShowImageModal(true);
+  };
+
+  // Handle deleting a collected item
+  const handleDeleteCollectedItem = (productId) => {
+    setCollectedItems((prevItems) => prevItems.filter((item) => item.id !== productId));
+    setRecieved((prev) => prev - 1);
   };
 
   return (
@@ -126,7 +141,7 @@ function DealerDashboard() {
               </div>
               
               <button
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/sitepublish/')}
                 style={{
                   background: 'transparent',
                   border: '2px solid #dc3545',
@@ -197,11 +212,24 @@ function DealerDashboard() {
                 <Package size={18} className="me-2" />
                 Sell Item
               </button>
+              <button
+                className="btn w-100"
+                onClick={toggleCollectedItemsView}
+                style={{
+                  background: 'white',
+                  color: 'rgb(23, 42, 165)',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '10px',
+                  border: '2px solid rgb(23, 42, 165)'
+                }}>
+                <ShoppingBag size={18} className="me-2" />
+                {viewCollectedItems ? "Hide Collected Items" : "See Collected Items"}
+              </button>
             </div>
           </div>
         </div>
 
-        <div className="col-md-4" style={{marginLeft:"150px", marginTop:"50px"}}>
+        <div className="col-md-6" style={{marginLeft:"80px", marginTop:"50px"}}>
   <div className="ms-4" style={{
     height: '400px',  // Defined a max height for consistency
     width: '800px',  
@@ -265,7 +293,7 @@ function DealerDashboard() {
           }}>
             <ShoppingBag size={24} style={{ color: 'rgb(23, 42, 165)' }} />
             <h3 style={{ fontSize: '1rem', color: '#64748b', marginTop: '0.5rem' }}>Collected Items</h3>
-            <h2 style={{ fontSize: '1.5rem', color: '#333333', marginBottom: 0 }}>0</h2>
+            <h2 style={{ fontSize: '1.5rem', color: '#333333', marginBottom: 0 }}>{collectedItems.length}</h2>
           </div>
         </div>
       </div>
@@ -278,80 +306,188 @@ function DealerDashboard() {
         boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
       }}>
         <h2 style={{ marginBottom: '2rem', color: '#333333' }}>
-          {viewCustomerProducts ? "Customer Requests" : "Your Products"}
+          {viewCustomerProducts ? "Customer Requests" : viewCollectedItems ? "Collected Items" : "Your Products"}
         </h2>
 
-        {products.length === 0 ? (
-          <div className="text-center py-5">
-            <Package size={48} style={{ color: '#cbd5e1' }} className="mb-3" />
-            <h4 style={{ color: '#333333' }}>No products available</h4>
-            <p style={{ color: '#64748b' }}>
-              {viewCustomerProducts
-                ? "No customer requests at the moment."
-                : "Click the 'Sell Item' button to list your first product."}
-            </p>
-          </div>
-        ) : (
-          <div className="table-responsive">
-            <table className="table">
-              <thead>
-                <tr style={{ background: '#f8fafc' }}>
-                  <th style={{ padding: '1rem' }}>Product Name</th>
-                  <th style={{ padding: '1rem' }}>Type</th>
-                  <th style={{ padding: '1rem' }}>{viewCustomerProducts ? "Description" : "Price"}</th>
-                  <th style={{ padding: '1rem' }}>Expiry Date</th>
-                  <th style={{ padding: '1rem' }}>{viewCustomerProducts ? "Customer Name" : "Description"}</th>
-                  <th style={{ padding: '1rem' }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((product, index) => (
-                  <tr key={product.id || index}>
-                    <td>{product.name}</td>
-                    <td>{product.type}</td>
-                    <td>{viewCustomerProducts ? product.description : product.price}</td>
-                    <td>{product.expiryDate}</td>
-                    <td>{viewCustomerProducts ? product.custname : product.description}</td>
-                    <td>
-                      {!viewCustomerProducts ? (
+        {viewCollectedItems ? (
+          collectedItems.length === 0 ? (
+            <div className="text-center py-5">
+              <Package size={48} style={{ color: '#cbd5e1' }} className="mb-3" />
+              <h4 style={{ color: '#333333' }}>No collected items available</h4>
+            </div>
+          ) : (
+            <div className="table-responsive">
+              <table className="table">
+                <thead>
+                  <tr style={{ background: '#f8fafc' }}>
+                    <th style={{ padding: '1rem' }}>Product Name</th>
+                    <th style={{ padding: '1rem' }}>Type</th>
+                    <th style={{ padding: '1rem' }}>Description</th>
+                    <th style={{ padding: '1rem' }}>Expiry Date</th>
+                    <th style={{ padding: '1rem' }}>Customer Name</th>
+                    <th style={{ padding: '1rem' }}>Photo</th>
+                    <th style={{ padding: '1rem' }}>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {collectedItems.map((product, index) => (
+                    <tr key={product.id || index}>
+                      <td>{product.name}</td>
+                      <td>{product.type}</td>
+                      <td>{product.description}</td>
+                      <td>{product.expiryDate}</td>
+                      <td>{product.custname}</td>
+                      <td>
+                        {product.photoData ? (
+                          <img
+                            src={`data:${product.photoType};base64,${product.photoData}`}
+                            alt={product.name}
+                            style={{ width: '50px', height: '50px', objectFit: 'cover', cursor: 'pointer' }}
+                            onClick={() => handleImageClick(product.photoData, product.photoType)}
+                          />
+                        ) : (
+                          'No Photo'
+                        )}
+                      </td>
+                      <td>
                         <button
                           className="btn btn-danger"
-                          onClick={() => {
-                            handleDeleteProduct(product.id);
-                            increment();
-                          }}
+                          onClick={() => handleDeleteCollectedItem(product.id)}
                         >
                           <LucideDelete size={18} className="me-1" />
                           Delete
                         </button>
-                      ) : (
-                        <>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+        ) : (
+          products.length === 0 ? (
+            <div className="text-center py-5">
+              <Package size={48} style={{ color: '#cbd5e1' }} className="mb-3" />
+              <h4 style={{ color: '#333333' }}>No products available</h4>
+              <p style={{ color: '#64748b' }}>
+                {viewCustomerProducts
+                  ? "No customer requests at the moment."
+                  : "Click the 'Sell Item' button to list your first product."}
+              </p>
+            </div>
+          ) : (
+            <div className="table-responsive">
+              <table className="table">
+                <thead>
+                  <tr style={{ background: '#f8fafc' }}>
+                    <th style={{ padding: '1rem' }}>Product Name</th>
+                    <th style={{ padding: '1rem' }}>Type</th>
+                    <th style={{ padding: '1rem' }}>{viewCustomerProducts ? "Description" : "Price"}</th>
+                    <th style={{ padding: '1rem' }}>Expiry Date</th>
+                    <th style={{ padding: '1rem' }}>{viewCustomerProducts ? "Customer Name" : "Description"}</th>
+                    {viewCustomerProducts && <th style={{ padding: '1rem' }}>Photo</th>}
+                    <th style={{ padding: '1rem' }}>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((product, index) => (
+                    <tr key={product.id || index}>
+                      <td>{product.name}</td>
+                      <td>{product.type}</td>
+                      <td>{viewCustomerProducts ? product.description : product.price}</td>
+                      <td>{product.expiryDate}</td>
+                      <td>{viewCustomerProducts ? product.custname : product.description}</td>
+                      {viewCustomerProducts && (
+                        <td>
+                          {product.photoData ? (
+                            <img
+                              src={`data:${product.photoType};base64,${product.photoData}`}
+                              alt={product.name}
+                              style={{ width: '50px', height: '50px', objectFit: 'cover', cursor: 'pointer' }}
+                              onClick={() => handleImageClick(product.photoData, product.photoType)}
+                            />
+                          ) : (
+                            'No Photo'
+                          )}
+                        </td>
+                      )}
+                      <td>
+                        {!viewCustomerProducts ? (
                           <button
                             className="btn btn-danger"
                             onClick={() => handleDeleteProduct(product.id)}
                           >
                             <LucideDelete size={18} className="me-1" />
-                            Reject
+                            Delete
                           </button>
-                          <button
-                            className="btn btn-success ms-2"
-                            onClick={() => handleAcceptRequest(product.id)}
-                          >
-                            <ArrowRightIcon size={18} className="me-1" />
-                            Accept
-                          </button>
-                        </>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                        ) : (
+                          <>
+                            <button
+                              className="btn btn-danger"
+                              onClick={() => handleDeleteProduct(product.id)}
+                            >
+                              <LucideDelete size={18} className="me-1" />
+                              Reject
+                            </button>
+                            <button
+                              className="btn btn-success ms-2"
+                              onClick={() => handleAcceptRequest(product)}
+                            >
+                              <ArrowRightIcon size={18} className="me-1" />
+                              Accept
+                            </button>
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
         )}
       </div>
 
-      {/* Modal */}
+      {/* Image Modal */}
+      {showImageModal && (
+        <div
+          className="modal-backdrop"
+          onClick={() => setShowImageModal(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1050
+          }}
+        >
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'white',
+              borderRadius: '10px',
+              padding: '1rem',
+              maxWidth: '90%',
+              maxHeight: '90%',
+              overflow: 'auto'
+            }}
+          >
+            <img
+              src={selectedImage}
+              alt="Enlarged"
+              style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Add Product Modal */}
       {showAddModal && (
         <AddProductModal
           show={showAddModal}

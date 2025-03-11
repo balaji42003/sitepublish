@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function AddProductModal({ show, onClose, setRefresh, dealerid }) {
+function CustomerResell({ show, onClose, setCrefresh, customerId, customerName }) {
   const [product, setProduct] = useState({
     name: '',
     type: '',
     expiryDate: '',
-    price: '',
     description: '',
-    customerName: '',
-    customerPhone: '',
-    customerEmail: ''
+    photo: null // Add photo field
   });
 
   const [error, setError] = useState(null);
@@ -31,6 +28,13 @@ function AddProductModal({ show, onClose, setRefresh, dealerid }) {
     }));
   };
 
+  const handleFileChange = (e) => {
+    setProduct(prev => ({
+      ...prev,
+      photo: e.target.files[0]
+    }));
+  };
+
   // Update form mapping to use handleInputChange
   const formFields = [
     { label: 'Product Name', type: 'text', name: 'name' },
@@ -47,11 +51,8 @@ function AddProductModal({ show, onClose, setRefresh, dealerid }) {
       ]
     },
     { label: 'Expiry Date', type: 'date', name: 'expiryDate' },
-    { label: 'Price', type: 'number', name: 'price' },
     { label: 'Description', type: 'textarea', name: 'description' },
-    { label: 'Customer Name', type: 'text', name: 'customerName' },
-    { label: 'Customer Phone', type: 'tel', name: 'customerPhone' },
-    { label: 'Customer Email', type: 'email', name: 'customerEmail' }
+    { label: 'Product Photo', type: 'file', name: 'photo' } // Add photo input for customers
   ];
 
   // Handle the form submit
@@ -60,34 +61,34 @@ function AddProductModal({ show, onClose, setRefresh, dealerid }) {
     setError(null);  // Reset error state on each submit
     setLoading(true);  // Start loading
 
-    // Prepare the product object for dealer
-    const productData = {
-      dealerId: dealerid,
+    const formData = new FormData();
+    const customerProductBlob = new Blob([JSON.stringify({
+      custid: customerId,
+      custname: customerName,
       name: product.name,
       type: product.type,
       expiryDate: product.expiryDate,
-      price: product.price,
-      description: product.description,
-      customerName: product.customerName,
-      customerPhone: product.customerPhone,
-      customerEmail: product.customerEmail
-    };
+      description: product.description
+    })], { type: "application/json" });
+
+    formData.append("customerProduct", customerProductBlob);
+    if (product.photo) {
+      formData.append("photo", product.photo);
+    }
 
     try {
-      // API call for dealer product
-      const response = await axios.post('http://localhost:8080/addDealerProduct', productData, {
+      // API call for customer product
+      const response = await axios.post('http://localhost:8080/addCustomerProduct', formData, {
         headers: {
-          'Content-Type': 'application/json',  // Ensure the backend expects JSON
+          'Content-Type': 'multipart/form-data',  // Ensure the backend expects form data
         }
       });
-      
-      console.log('Dealer product added successfully:', response.data);
-      setRefresh(true);
-
+      console.log('Customer product added successfully:', response.data);
+      setCrefresh(true);
     } catch (err) {
       // Handle error
-      console.error('Error adding dealer product:', err);
-      setError('Error adding dealer product. Please try again later.');
+      console.error('Error adding customer product:', err);
+      setError('Error adding customer product. Please try again later.');
     }
 
     // Reset the form and close modal
@@ -95,11 +96,8 @@ function AddProductModal({ show, onClose, setRefresh, dealerid }) {
       name: '',
       type: '',
       expiryDate: '',
-      price: '',
       description: '',
-      customerName: '',
-      customerPhone: '',
-      customerEmail: ''
+      photo: null
     });
     setLoading(false);  // Stop loading
     onClose();  // Close the modal
@@ -154,7 +152,7 @@ function AddProductModal({ show, onClose, setRefresh, dealerid }) {
         }}>
           <div className="d-flex justify-content-between align-items-center">
             <h5 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '600' }}>
-              Add Product for Sale
+              Add Product for Recycling
             </h5>
             <button 
               type="button" 
@@ -215,6 +213,22 @@ function AddProductModal({ show, onClose, setRefresh, dealerid }) {
                       fontSize: '1rem',
                       transition: 'all 0.3s ease',
                       minHeight: '100px'
+                    }}
+                  />
+                ) : field.type === 'file' ? (
+                  <input
+                    type={field.type}
+                    name={field.name}
+                    className="form-control"
+                    onChange={handleFileChange}
+                    required
+                    style={{
+                      height: '3rem',
+                      borderRadius: '10px',
+                      border: '2px solid #e2e8f0',
+                      padding: '0.75rem',
+                      fontSize: '1rem',
+                      transition: 'all 0.3s ease'
                     }}
                   />
                 ) : (
@@ -309,4 +323,4 @@ function AddProductModal({ show, onClose, setRefresh, dealerid }) {
   );
 }
 
-export default AddProductModal;
+export default CustomerResell;
